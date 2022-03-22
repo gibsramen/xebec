@@ -1,0 +1,23 @@
+import os
+from pathlib import Path
+
+phylogenetic_tree_file = "{{cookiecutter.phylogenetic_tree_file}}"
+
+CURR_DIR = os.path.dirname(__file__)
+
+# https://stackoverflow.com/a/51524232
+CFG_DIR = os.path.join(Path(CURR_DIR).parents[0], "config")
+
+# ALPHA_METRICS_PATH = os.path.join(CFG_DIR, "alpha_div_metrics.txt")
+# BETA_METRICS_PATH = os.path.join(CFG_DIR, "beta_div_metrics.txt")
+
+# with open(ALPHA_METRICS_PATH, "r") as f:
+#     ALPHA_METRICS = f.read().splitlines()
+
+BETA_METRICS_PATH = "../config/alpha_div_metrics.txt"
+with open(BETA_METRICS_PATH, "r") as f:
+    BETA_METRICS = f.read().splitlines()
+
+configfile: "../config/config.yaml"
+
+include: "rules/beta_diversity.smk"
