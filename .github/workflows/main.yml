@@ -29,7 +29,7 @@ jobs:
 
       - name: Install conda packages
         shell: bash -l {0}
-        run: conda install -c bioconda -c conda-forge -c anaconda pandas pytest pytest-cookies unifrac unifrac-binaries==1.0.0 scikit-bio snakemake
+        run: conda install -c bioconda -c conda-forge -c anaconda snakemake pandas pytest pytest-cookies unifrac unifrac-binaries==1.0.0 scikit-bio
 
       - name: Install gemelli
         shell: bash -l {0}
