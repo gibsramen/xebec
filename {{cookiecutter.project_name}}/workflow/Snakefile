@@ -1,22 +1,16 @@
-import os
-from pathlib import Path
+import pandas as pd
 
-phylogenetic_tree_file = "{{cookiecutter.phylogenetic_tree_file}}"
+beta_metrics_path = "../config/beta_div_metrics.tsv"
+beta_metrics = pd.read_table(beta_metrics_path, sep="\t")
 
-CURR_DIR = os.path.dirname(__file__)
+distance_matrices = [
+    f"../results/beta_div/{row['metric_type']}/{row['metric']}/distance-matrix.tsv"
+    for i, row in beta_metrics.iterrows()
+]
 
-# https://stackoverflow.com/a/51524232
-CFG_DIR = os.path.join(Path(CURR_DIR).parents[0], "config")
-
-# ALPHA_METRICS_PATH = os.path.join(CFG_DIR, "alpha_div_metrics.txt")
-# BETA_METRICS_PATH = os.path.join(CFG_DIR, "beta_div_metrics.txt")
-
-# with open(ALPHA_METRICS_PATH, "r") as f:
-#     ALPHA_METRICS = f.read().splitlines()
-
-BETA_METRICS_PATH = "../config/alpha_div_metrics.txt"
-with open(BETA_METRICS_PATH, "r") as f:
-    BETA_METRICS = f.read().splitlines()
+rule beta_diversity:
+    input:
+        distance_matrices
 
 configfile: "../config/config.yaml"
 

@@ -1,0 +1,6 @@
+metric	metric_type
+braycurtis	non_phylo
+jaccard	non_phylo
+rpca	non_phylo
+unweighted_unifrac	phylo
+weighted_unifrac	phylo
