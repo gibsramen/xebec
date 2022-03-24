@@ -32,7 +32,7 @@ jobs:
 
       - name: Install conda packages
         shell: bash -l {0}
-        run: mamba install -c conda-forge -c bioconda snakemake pandas pytest pytest-cookies unifrac scikit-bio
+        run: mamba install -c conda-forge -c cython bioconda snakemake pandas pytest pytest-cookies unifrac scikit-bio
 
       - name: Install gemelli
         shell: bash -l {0}
@@ -44,4 +44,13 @@ jobs:
 
       - name: Run Snakemake
         shell: bash -l {0}
-        run: make snaketest || exit 1
+        run: >
+            TMPDIR=$(mktemp -d) \
+            COOKIE_DIR=$(pwd) \
+            TABLE_FILE=$(realpath tests/data/table.biom) \
+            MD_FILE=$(realpath tests/data/metadata.tsv) \
+            TREE_FILE=$(realpath tests/data/tree.tre) \
+            cd $(TMPDIR) \
+            cookiecutter --no-input ${COOKIE_DIR} feature_table_file=${TABLE_FILE} sample_metadata_file=$(MD_FILE) phylogenetic_tree_file=${TREE_FILE} \
+            cd diversity-benchmark/workflow \
+            snakemake beta_diversity --cores 1
