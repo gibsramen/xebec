@@ -32,6 +32,30 @@ You should enter a prompt where you can input the required values to setup xebec
 
 This will create the directory structure needed to run xebec under the project name you specified.
 
+The directory structure should be as follows:
+
+```
+.
+├── config
+│   ├── alpha_div_metrics.tsv
+│   ├── beta_div_metrics.tsv
+│   └── config.yaml
+├── results
+│   ├── alpha_div
+│   └── beta_div
+│       ├── non_phylo
+│       │   └── README.md
+│       └── phylo
+│           └── README.md
+└── workflow
+    ├── rules
+    │   ├── alpha_diversity.smk
+    │   └── beta_diversity.smk
+    └── Snakefile
+
+8 directories, 8 files
+```
+
 ## Usage
 
 Navigate inside the `<project_name>/workflow` directory.
