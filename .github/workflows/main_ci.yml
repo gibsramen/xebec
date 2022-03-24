@@ -32,7 +32,7 @@ jobs:
 
       - name: Install conda packages
         shell: bash -l {0}
-        run: mamba install -c conda-forge -c cython bioconda snakemake pandas pytest pytest-cookies unifrac scikit-bio
+        run: mamba install -c conda-forge -c bioconda cython snakemake pandas pytest pytest-cookies unifrac scikit-bio
 
       - name: Install gemelli
         shell: bash -l {0}
