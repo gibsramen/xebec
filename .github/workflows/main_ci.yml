@@ -25,11 +25,12 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: xebec
+          mamba-version: "*"
           python-version: ${{ matrix.python-version }}
 
       - name: Install conda packages
         shell: bash -l {0}
-        run: conda install -c bioconda -c conda-forge -c anaconda snakemake pandas pytest pytest-cookies unifrac unifrac-binaries==1.0.0 scikit-bio
+        run: mamba install -c conda-forge -c bioconda snakemake pandas pytest pytest-cookies unifrac scikit-bio
 
       - name: Install gemelli
         shell: bash -l {0}
