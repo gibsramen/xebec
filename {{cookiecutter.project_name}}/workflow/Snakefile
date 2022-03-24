@@ -8,10 +8,28 @@ distance_matrices = [
     for i, row in beta_metrics.iterrows()
 ]
 
-rule beta_diversity:
+effect_sizes = [
+    f"../results/beta_div/{row['metric_type']}/{row['metric']}/effect_sizes.tsv"
+    for i, row in beta_metrics.iterrows()
+]
+pw_effect_sizes = [
+    f"../results/beta_div/{row['metric_type']}/{row['metric']}/pairwise_effect_sizes.tsv"
+    for i, row in beta_metrics.iterrows()
+]
+
+rule generate_effect_sizes:
+    input:
+        effect_sizes
+
+rule generate_pairwise_effect_sizes:
+    input:
+        pw_effect_sizes
+
+rule generate_distance_matrices:
     input:
         distance_matrices
 
 configfile: "../config/config.yaml"
 
 include: "rules/beta_diversity.smk"
+include: "rules/evident.smk"

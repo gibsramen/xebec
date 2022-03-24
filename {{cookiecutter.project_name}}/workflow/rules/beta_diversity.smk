@@ -20,6 +20,7 @@ rule rpca:
             --min-sample-count 0
         """
 
+
 rule non_phylo_beta_div:
     input:
         "{{cookiecutter.feature_table_file}}"
@@ -38,6 +39,7 @@ rule non_phylo_beta_div:
         )
         dm.write(output[0])
 
+
 ## PHYLOGENETIC METRICS ##
 rule phylo_rpca:
     input:
@@ -55,6 +57,7 @@ rule phylo_rpca:
             --n-components {config[n_components]} \
             --min-sample-count 0
         """
+
 
 rule phylo_beta_div:
     input:
