@@ -15,7 +15,7 @@ rule rpca:
         gemelli rpca \
             --in-biom {input} \
             --output-dir ../results/beta_div/non_phylo/rpca \
-            --n_components {config[n_components]} \
+            --n-components {config[n_components]} \
             --min-sample-count 0
         """
 
