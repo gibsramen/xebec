@@ -4,6 +4,7 @@ import biom
 from skbio.diversity import beta_diversity
 import unifrac
 
+## NON-PHYLOGENETIC METRICS ##
 rule rpca:
     input:
         "{{cookiecutter.feature_table_file}}"
@@ -37,6 +38,23 @@ rule non_phylo_beta_div:
         )
         dm.write(output[0])
 
+## PHYLOGENETIC METRICS ##
+rule phylo_rpca:
+    input:
+        tbl_file = "{{cookiecutter.feature_table_file}}",
+        tree_file = "{{cookiecutter.phylogenetic_tree_file}}"
+    output:
+        "../results/beta_div/phylo/phylo_rpca/distance-matrix.tsv",
+        "../results/beta_div/phylo/phylo_rpca/ordination.txt"
+    shell:
+        """
+        gemelli phylogenetic-rpca \
+            --in-biom {input.tbl_file} \
+            --in-phylogeny {input.tree_file} \
+            --output-dir ../results/beta_div/phylo/phylo_rpca \
+            --n-components {config[n_components]} \
+            --min-sample-count 0
+        """
 
 rule phylo_beta_div:
     input:
