@@ -1,8 +1,24 @@
 import os
 
 import biom
+import numpy as np
 from skbio.diversity import beta_diversity
 import unifrac
+
+rule rarefy:
+    input:
+        "{{cookiecutter.feature_table_file}}"
+    output:
+        "../results/rarefied_table.biom"
+    run:
+        table = biom.load_table(input[0])
+        depths = table.sum(axis="sample")
+        rare_depth = round(np.quantile(depths, config["rarefaction_depth_percentile"]/100))
+        table_rare = table.subsample(rare_depth)
+
+        with biom.util.biom_open(output[0], "w") as f:
+            table_rare.to_hdf5(f, "rarefy")
+
 
 ## NON-PHYLOGENETIC METRICS ##
 rule rpca:
@@ -61,7 +77,7 @@ rule phylo_rpca:
 
 rule phylo_beta_div:
     input:
-        tbl_file = "{{cookiecutter.feature_table_file}}",
+        tbl_file = "../results/rarefied_table.biom",
         tree_file = "{{cookiecutter.phylogenetic_tree_file}}"
     output:
         "../results/beta_div/phylo/{beta_div_metric}/distance-matrix.tsv"
