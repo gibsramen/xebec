@@ -47,7 +47,7 @@ rule calculate_beta_div_effect_sizes:
         "../results/beta_div/{is_phylo}/{beta_div_metric}/effect_sizes.tsv"
     run:
         md = pd.read_table(input["md_file"], sep="\t", index_col=0)
-        dm = DistanceMatrix.read(input["md_file"])
+        dm = DistanceMatrix.read(input["dm_file"])
 
         bdh = BetaDiversityHandler(dm, md)
         res = effect_size_by_category(bdh, md.columns).to_dataframe()
