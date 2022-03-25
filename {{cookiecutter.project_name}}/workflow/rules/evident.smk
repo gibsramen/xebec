@@ -10,6 +10,8 @@ rule filter_metadata:
         "{{cookiecutter.sample_metadata_file}}"
     output:
         "results/filtered_metadata.tsv"
+    log:
+        "logs/filter_metadata.log"
     run:
         metadata = pd.read_table(input[0], sep="\t", index_col=0)
 
@@ -46,6 +48,8 @@ rule calculate_beta_div_effect_sizes:
         dm_file = "results/beta_div/{is_phylo}/{beta_div_metric}/distance-matrix.tsv"
     output:
         "results/beta_div/{is_phylo}/{beta_div_metric}/effect_sizes.tsv"
+    log:
+        "logs/calculate_beta_div_effect_sizes.{is_phylo}.{beta_div_metric}.log"
     run:
         md = pd.read_table(input["md_file"], sep="\t", index_col=0)
         dm = DistanceMatrix.read(input["dm_file"])
@@ -61,6 +65,8 @@ rule calculate_beta_div_pairwise_effect_sizes:
         dm_file = "results/beta_div/{is_phylo}/{beta_div_metric}/distance-matrix.tsv"
     output:
         "results/beta_div/{is_phylo}/{beta_div_metric}/pairwise_effect_sizes.tsv"
+    log:
+        "logs/calculate_beta_div_pairwise_effect_sizes.{is_phylo}.{beta_div_metric}.log"
     run:
         md = pd.read_table(input["md_file"], sep="\t", index_col=0)
         dm = DistanceMatrix.read(input["dm_file"])
@@ -90,31 +96,37 @@ def concatenate_metric_dataframes(files):
     return total_df
 
 
-effect_sizes = [
+beta_div_effect_sizes = [
     f"results/beta_div/{row['metric_type']}/{row['metric']}/effect_sizes.tsv"
     for i, row in beta_metrics.iterrows()
 ]
-pw_effect_sizes = [
+beta_div_pw_effect_sizes = [
     f"results/beta_div/{row['metric_type']}/{row['metric']}/pairwise_effect_sizes.tsv"
     for i, row in beta_metrics.iterrows()
 ]
 
 
-rule concatenate_effect_sizes:
+# Can't use double brace syntax for Snakemake wildcards in expand because this notation is
+# used for cookiecutter.
+rule concatenate_beta_div_effect_sizes:
     input:
-        effect_sizes
+        beta_div_effect_sizes
     output:
         "results/beta_div/all_metrics_effect_sizes.tsv"
+    log:
+        "logs/concatenate_beta_div_effect_sizes.log"
     run:
         all_metrics_df = concatenate_metric_dataframes(input)
         all_metrics_df.to_csv(output[0], sep="\t", index=False)
 
 
-rule concatenate_effect_sizes_pw:
+rule concatenate_beta_div_pairwise_effect_sizes:
     input:
-        pw_effect_sizes
+        beta_div_pw_effect_sizes
     output:
         "results/beta_div/all_metrics_pairwise_effect_sizes.tsv"
+    log:
+        "logs/concatenate_beta_div_pairwise_effect_sizes.log"
     run:
         all_metrics_df = concatenate_metric_dataframes(input)
         all_metrics_df.to_csv(output[0], sep="\t", index=False)

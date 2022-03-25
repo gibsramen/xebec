@@ -10,6 +10,8 @@ rule rarefy:
         "{{cookiecutter.feature_table_file}}"
     output:
         "results/rarefied_table.biom"
+    log:
+        "logs/rarefy.log"
     run:
         table = biom.load_table(input[0])
         depths = table.sum(axis="sample")
@@ -27,6 +29,8 @@ rule rpca:
     output:
         "results/beta_div/non_phylo/rpca/distance-matrix.tsv",
         "results/beta_div/non_phylo/rpca/ordination.txt"
+    log:
+        "logs/rpca.log"
     shell:
         """
         gemelli rpca \
@@ -42,6 +46,8 @@ rule non_phylo_beta_div:
         "{{cookiecutter.feature_table_file}}"
     output:
         "results/beta_div/non_phylo/{beta_div_metric}/distance-matrix.tsv"
+    log:
+        "logs/{beta_div_metric}.log"
     params:
         "results/beta_div/non_phylo/{beta_div_metric}"
     run:
@@ -64,6 +70,8 @@ rule phylo_rpca:
     output:
         "results/beta_div/phylo/phylo_rpca/distance-matrix.tsv",
         "results/beta_div/phylo/phylo_rpca/ordination.txt"
+    log:
+        "logs/phylo_rpca.log"
     shell:
         """
         gemelli phylogenetic-rpca \
@@ -81,6 +89,8 @@ rule phylo_beta_div:
         tree_file = "{{cookiecutter.phylogenetic_tree_file}}"
     output:
         "results/beta_div/phylo/{beta_div_metric}/distance-matrix.tsv"
+    log:
+        "logs/{beta_div_metric}.log"
     params:
         "results/beta_div/phylo/{beta_div_metric}"
     run:
