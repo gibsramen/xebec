@@ -2,6 +2,8 @@
 
 Snakemake pipeline for microbiome diversity effect size benchmarking
 
+**NOTE**: Please note that xebec is still under active development.
+
 ## Installation
 
 To use xebec, you will need several dependencies:
@@ -11,6 +13,7 @@ To use xebec, you will need several dependencies:
 * unifrac
 * scikit-bio
 * pandas
+* bokeh
 * evident
 * gemelli
 
@@ -63,10 +66,17 @@ snakemake --cores 1
 
 You should see the Snakemake pipeline start running the jobs.
 If this pipeline runs sucessfully, the processed results will be located at `<project_name>/results`.
+Open the `results/beta_div/effect_size_plot.html` webpage and you should be taken to an interactive visualization.
+On the left are the effect sizes of diversity differences for binary categories.
+On the right are the effect sizes of diversity differences for multi-class categories.
+You can move around these plots, zoom in, as well as toggle the visibility of diversity metrics by clicking on the legend.
+These plots are generated using [Bokeh](https://github.com/bokeh/bokeh).
+
+![Bokeh](https://raw.githubusercontent.com/gibsramen/xebec/main/imgs/bokeh.png)
 
 ## Workflow Overview
 
-xebec performs three main steps, some of which have substeps.
+xebec performs four main steps, some of which have substeps.
 
 1. Process data (filter metadata, rarefaction)
 2. Run diversity analyses
