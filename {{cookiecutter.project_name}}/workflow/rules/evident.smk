@@ -94,8 +94,8 @@ def concatenate_metric_dataframes(files):
         all_dfs.append(this_df)
         all_keys.append(this_keys)
 
-    total_df = pd.concat(all_dfs, keys=all_keys, names=["metric_type", "metric_name"])
-    total_df = total_df.reset_index(level=("metric_type", "metric_name"))
+    total_df = pd.concat(all_dfs, keys=all_keys, names=["phylogenetic", "diversity_metric"])
+    total_df = total_df.reset_index(level=("phylogenetic", "diversity_metric"))
     return total_df
 
 
