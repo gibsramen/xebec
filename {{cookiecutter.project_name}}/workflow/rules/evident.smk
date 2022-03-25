@@ -79,9 +79,12 @@ rule calculate_beta_div_pairwise_effect_sizes:
 def concatenate_metric_dataframes(files):
     """Concatenate results from multiple metrics."""
     def get_metric_info(f):
-        """Return metric type and metric name as tuple."""
+        """Return metric type and metric name as tuple.
+
+        results/beta_div/*/*/effect_sizes.tsv
+        """
         path_parts = PurePath(f).parts
-        return path_parts[3], path_parts[4]
+        return path_parts[2], path_parts[3]
 
     all_dfs = []
     all_keys = []
