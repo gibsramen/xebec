@@ -100,11 +100,11 @@ def concatenate_metric_dataframes(files):
 
 
 beta_div_effect_sizes = [
-    f"results/beta_div/{row['metric_type']}/{row['metric']}/effect_sizes.tsv"
+    f"results/beta_div/{row['phylogenetic']}/{row['diversity_metric']}/effect_sizes.tsv"
     for i, row in beta_metrics.iterrows()
 ]
 beta_div_pw_effect_sizes = [
-    f"results/beta_div/{row['metric_type']}/{row['metric']}/pairwise_effect_sizes.tsv"
+    f"results/beta_div/{row['phylogenetic']}/{row['diversity_metric']}/pairwise_effect_sizes.tsv"
     for i, row in beta_metrics.iterrows()
 ]
 

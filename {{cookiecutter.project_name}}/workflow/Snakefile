@@ -8,10 +8,10 @@ beta_metrics = pd.read_table(beta_metrics_path, sep="\t")
 
 rule all:
     input:
-        "results/beta_div/all_metrics_pairwise_effect_sizes.tsv",
-        "results/beta_div/all_metrics_effect_sizes.tsv",
+        "results/beta_div/effect_size_plot.html"
 
 configfile: "config/config.yaml"
 
 include: "rules/beta_diversity.smk"
 include: "rules/evident.smk"
+include: "rules/visualization.smk"

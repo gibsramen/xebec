@@ -1,4 +1,4 @@
-metric	metric_type
+diversity_metric	phylogenetic
 braycurtis	non_phylo
 jaccard	non_phylo
 rpca	non_phylo
