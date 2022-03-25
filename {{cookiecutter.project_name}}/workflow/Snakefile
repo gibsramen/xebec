@@ -3,20 +3,20 @@ import re
 
 import pandas as pd
 
-beta_metrics_path = "../config/beta_div_metrics.tsv"
+beta_metrics_path = "config/beta_div_metrics.tsv"
 beta_metrics = pd.read_table(beta_metrics_path, sep="\t")
 
 distance_matrices = [
-    f"../results/beta_div/{row['metric_type']}/{row['metric']}/distance-matrix.tsv"
+    f"results/beta_div/{row['metric_type']}/{row['metric']}/distance-matrix.tsv"
     for i, row in beta_metrics.iterrows()
 ]
 
 effect_sizes = [
-    f"../results/beta_div/{row['metric_type']}/{row['metric']}/effect_sizes.tsv"
+    f"results/beta_div/{row['metric_type']}/{row['metric']}/effect_sizes.tsv"
     for i, row in beta_metrics.iterrows()
 ]
 pw_effect_sizes = [
-    f"../results/beta_div/{row['metric_type']}/{row['metric']}/pairwise_effect_sizes.tsv"
+    f"results/beta_div/{row['metric_type']}/{row['metric']}/pairwise_effect_sizes.tsv"
     for i, row in beta_metrics.iterrows()
 ]
 
@@ -44,13 +44,13 @@ rule concatenate_effect_sizes:
     input:
         effect_sizes
     output:
-        "../results/beta_div/all_metrics_effect_sizes.tsv"
+        "results/beta_div/all_metrics_effect_sizes.tsv"
     run:
         all_metrics_df = concatenate_metric_dataframes(input)
         all_metrics_df.to_csv(output[0], sep="\t", index=False)
 
 
-configfile: "../config/config.yaml"
+configfile: "config/config.yaml"
 
 include: "rules/beta_diversity.smk"
 include: "rules/evident.smk"

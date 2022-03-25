@@ -8,7 +8,7 @@ rule filter_metadata:
     input:
         "{{cookiecutter.sample_metadata_file}}"
     output:
-        "../results/filtered_metadata.tsv"
+        "results/filtered_metadata.tsv"
     run:
         metadata = pd.read_table(input[0], sep="\t", index_col=0)
 
@@ -41,10 +41,10 @@ rule filter_metadata:
 
 rule calculate_beta_div_effect_sizes:
     input:
-        md_file = "../results/filtered_metadata.tsv",
-        dm_file = "../results/beta_div/{is_phylo}/{beta_div_metric}/distance-matrix.tsv"
+        md_file = "results/filtered_metadata.tsv",
+        dm_file = "results/beta_div/{is_phylo}/{beta_div_metric}/distance-matrix.tsv"
     output:
-        "../results/beta_div/{is_phylo}/{beta_div_metric}/effect_sizes.tsv"
+        "results/beta_div/{is_phylo}/{beta_div_metric}/effect_sizes.tsv"
     run:
         md = pd.read_table(input["md_file"], sep="\t", index_col=0)
         dm = DistanceMatrix.read(input["dm_file"])
@@ -56,10 +56,10 @@ rule calculate_beta_div_effect_sizes:
 
 rule calculate_beta_div_pairwise_effect_sizes:
     input:
-        md_file = "../results/filtered_metadata.tsv",
-        dm_file = "../results/beta_div/{is_phylo}/{beta_div_metric}/distance-matrix.tsv"
+        md_file = "results/filtered_metadata.tsv",
+        dm_file = "results/beta_div/{is_phylo}/{beta_div_metric}/distance-matrix.tsv"
     output:
-        "../results/beta_div/{is_phylo}/{beta_div_metric}/pairwise_effect_sizes.tsv"
+        "results/beta_div/{is_phylo}/{beta_div_metric}/pairwise_effect_sizes.tsv"
     run:
         md = pd.read_table(input["md_file"], sep="\t", index_col=0)
         dm = DistanceMatrix.read(dm_file)

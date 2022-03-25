@@ -9,7 +9,7 @@ rule rarefy:
     input:
         "{{cookiecutter.feature_table_file}}"
     output:
-        "../results/rarefied_table.biom"
+        "results/rarefied_table.biom"
     run:
         table = biom.load_table(input[0])
         depths = table.sum(axis="sample")
@@ -25,13 +25,13 @@ rule rpca:
     input:
         "{{cookiecutter.feature_table_file}}"
     output:
-        "../results/beta_div/non_phylo/rpca/distance-matrix.tsv",
-        "../results/beta_div/non_phylo/rpca/ordination.txt"
+        "results/beta_div/non_phylo/rpca/distance-matrix.tsv",
+        "results/beta_div/non_phylo/rpca/ordination.txt"
     shell:
         """
         gemelli rpca \
             --in-biom {input} \
-            --output-dir ../results/beta_div/non_phylo/rpca \
+            --output-dir results/beta_div/non_phylo/rpca \
             --n-components {config[n_components]} \
             --min-sample-count 0
         """
@@ -41,9 +41,9 @@ rule non_phylo_beta_div:
     input:
         "{{cookiecutter.feature_table_file}}"
     output:
-        "../results/beta_div/non_phylo/{beta_div_metric}/distance-matrix.tsv"
+        "results/beta_div/non_phylo/{beta_div_metric}/distance-matrix.tsv"
     params:
-        "../results/beta_div/non_phylo/{beta_div_metric}"
+        "results/beta_div/non_phylo/{beta_div_metric}"
     run:
         os.makedirs(params[0], exist_ok=True)
         table = biom.load_table(input[0])
@@ -62,14 +62,14 @@ rule phylo_rpca:
         tbl_file = "{{cookiecutter.feature_table_file}}",
         tree_file = "{{cookiecutter.phylogenetic_tree_file}}"
     output:
-        "../results/beta_div/phylo/phylo_rpca/distance-matrix.tsv",
-        "../results/beta_div/phylo/phylo_rpca/ordination.txt"
+        "results/beta_div/phylo/phylo_rpca/distance-matrix.tsv",
+        "results/beta_div/phylo/phylo_rpca/ordination.txt"
     shell:
         """
         gemelli phylogenetic-rpca \
             --in-biom {input.tbl_file} \
             --in-phylogeny {input.tree_file} \
-            --output-dir ../results/beta_div/phylo/phylo_rpca \
+            --output-dir results/beta_div/phylo/phylo_rpca \
             --n-components {config[n_components]} \
             --min-sample-count 0
         """
@@ -77,12 +77,12 @@ rule phylo_rpca:
 
 rule phylo_beta_div:
     input:
-        tbl_file = "../results/rarefied_table.biom",
+        tbl_file = "results/rarefied_table.biom",
         tree_file = "{{cookiecutter.phylogenetic_tree_file}}"
     output:
-        "../results/beta_div/phylo/{beta_div_metric}/distance-matrix.tsv"
+        "results/beta_div/phylo/{beta_div_metric}/distance-matrix.tsv"
     params:
-        "../results/beta_div/phylo/{beta_div_metric}"
+        "results/beta_div/phylo/{beta_div_metric}"
     run:
         os.makedirs(params[0], exist_ok=True)
 

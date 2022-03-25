@@ -58,8 +58,7 @@ The directory structure should be as follows:
 
 ## Usage
 
-Navigate inside the `<project_name>/workflow` directory.
-You should see a file called `Snakefile` - this file is used to run xebec.
+Navigate inside the `<project_name>` directory.
 To perform all beta-diversity calculations, run the following command:
 
 ```
