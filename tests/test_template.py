@@ -21,7 +21,7 @@ def test_bake_project(cookies):
     assert result.project_path.is_dir()
 
     files = os.listdir(result.project_path)
-    assert set(files) == {"workflow", "results", "config"}
+    assert set(files) == {"workflow", "config"}
 
     config_dir = os.path.join(result.project_path, "config")
     config_files = os.listdir(config_dir)

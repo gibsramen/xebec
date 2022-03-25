@@ -40,13 +40,6 @@ The directory structure should be as follows:
 │   ├── alpha_div_metrics.tsv
 │   ├── beta_div_metrics.tsv
 │   └── config.yaml
-├── results
-│   ├── alpha_div
-│   └── beta_div
-│       ├── non_phylo
-│       │   └── README.md
-│       └── phylo
-│           └── README.md
 └── workflow
     ├── rules
     │   ├── alpha_diversity.smk
@@ -59,7 +52,7 @@ The directory structure should be as follows:
 ## Usage
 
 Navigate inside the `<project_name>` directory.
-To perform all beta-diversity calculations, run the following command:
+To start the pipeline , run the following command:
 
 ```
 snakemake --cores 1
