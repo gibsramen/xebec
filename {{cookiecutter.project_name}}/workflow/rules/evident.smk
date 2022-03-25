@@ -94,17 +94,17 @@ def concatenate_metric_dataframes(files):
         all_dfs.append(this_df)
         all_keys.append(this_keys)
 
-    total_df = pd.concat(all_dfs, keys=all_keys, names=["metric_type", "metric_name"])
-    total_df = total_df.reset_index(level=("metric_type", "metric_name"))
+    total_df = pd.concat(all_dfs, keys=all_keys, names=["phylogenetic", "diversity_metric"])
+    total_df = total_df.reset_index(level=("phylogenetic", "diversity_metric"))
     return total_df
 
 
 beta_div_effect_sizes = [
-    f"results/beta_div/{row['metric_type']}/{row['metric']}/effect_sizes.tsv"
+    f"results/beta_div/{row['phylogenetic']}/{row['diversity_metric']}/effect_sizes.tsv"
     for i, row in beta_metrics.iterrows()
 ]
 beta_div_pw_effect_sizes = [
-    f"results/beta_div/{row['metric_type']}/{row['metric']}/pairwise_effect_sizes.tsv"
+    f"results/beta_div/{row['phylogenetic']}/{row['diversity_metric']}/pairwise_effect_sizes.tsv"
     for i, row in beta_metrics.iterrows()
 ]
 
