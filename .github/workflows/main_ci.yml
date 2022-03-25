@@ -35,9 +35,9 @@ jobs:
         shell: bash -l {0}
         run: mamba install -c conda-forge -c bioconda biom-format h5py==3.1.0 snakemake pandas pytest pytest-cookies unifrac scikit-bio
 
-      - name: Install gemelli
+      - name: Install pip packages
         shell: bash -l {0}
-        run: pip install gemelli
+        run: pip install gemelli evident
 
       - name: Run tests
         shell: bash -l {0}
