@@ -62,8 +62,8 @@ Navigate inside the `<project_name>` directory.
 To perform all beta-diversity calculations, run the following command:
 
 ```
-snakemake beta_diversity --cores 1
+snakemake --cores 1
 ```
 
 You should see the Snakemake pipeline start running the jobs.
-The resulting distance matrices will be stored inside `<project_name>/results/beta-div`.
+If this pipeline runs sucessfully, the processed results will be located at `<project_name>/results`.
