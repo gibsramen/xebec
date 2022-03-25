@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from skbio import DistanceMatrix
 
+
 rule filter_metadata:
     input:
         "{{cookiecutter.sample_metadata_file}}"
@@ -62,8 +63,58 @@ rule calculate_beta_div_pairwise_effect_sizes:
         "results/beta_div/{is_phylo}/{beta_div_metric}/pairwise_effect_sizes.tsv"
     run:
         md = pd.read_table(input["md_file"], sep="\t", index_col=0)
-        dm = DistanceMatrix.read(dm_file)
+        dm = DistanceMatrix.read(input["dm_file"])
 
         bdh = BetaDiversityHandler(dm, md)
         res = pairwise_effect_size_by_category(bdh, md.columns).to_dataframe()
         res.to_csv(output[0], sep="\t", index=True)
+
+
+def concatenate_metric_dataframes(files):
+    """Concatenate results from multiple metrics."""
+    def get_metric_info(f):
+        """Return metric type and metric name as tuple."""
+        path_parts = PurePath(f).parts
+        return path_parts[3], path_parts[4]
+
+    all_dfs = []
+    all_keys = []
+    for f in files:
+        this_df = pd.read_table(f, sep="\t", index_col=0)
+        this_keys = get_metric_info(f)
+        all_dfs.append(this_df)
+        all_keys.append(this_keys)
+
+    total_df = pd.concat(all_dfs, keys=all_keys, names=["metric_type", "metric_name"])
+    total_df = total_df.reset_index(level=("metric_type", "metric_name"))
+    return total_df
+
+
+effect_sizes = [
+    f"results/beta_div/{row['metric_type']}/{row['metric']}/effect_sizes.tsv"
+    for i, row in beta_metrics.iterrows()
+]
+pw_effect_sizes = [
+    f"results/beta_div/{row['metric_type']}/{row['metric']}/pairwise_effect_sizes.tsv"
+    for i, row in beta_metrics.iterrows()
+]
+
+
+rule concatenate_effect_sizes:
+    input:
+        effect_sizes
+    output:
+        "results/beta_div/all_metrics_effect_sizes.tsv"
+    run:
+        all_metrics_df = concatenate_metric_dataframes(input)
+        all_metrics_df.to_csv(output[0], sep="\t", index=False)
+
+
+rule concatenate_effect_sizes_pw:
+    input:
+        pw_effect_sizes
+    output:
+        "results/beta_div/all_metrics_pairwise_effect_sizes.tsv"
+    run:
+        all_metrics_df = concatenate_metric_dataframes(input)
+        all_metrics_df.to_csv(output[0], sep="\t", index=False)
