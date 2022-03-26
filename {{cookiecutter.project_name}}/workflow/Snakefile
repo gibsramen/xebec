@@ -1,17 +1,34 @@
-from pathlib import PurePath
-import re
+import logging
 
 import pandas as pd
+
+def get_logger(logfile):
+    xebec_logger = logging.getLogger("xebec")
+    xebec_logger.setLevel(logging.INFO)
+    fh = logging.FileHandler(logfile, mode="w")
+    formatter = logging.Formatter(
+        "[%(asctime)s - %(name)s - %(levelname)s] :: %(message)s"
+    )
+    fh.setFormatter(formatter)
+    xebec_logger.addHandler(fh)
+
+    return xebec_logger
+
+alpha_metrics_path = "config/alpha_div_metrics.tsv"
+alpha_metrics = pd.read_table(alpha_metrics_path, sep="\t")
 
 beta_metrics_path = "config/beta_div_metrics.tsv"
 beta_metrics = pd.read_table(beta_metrics_path, sep="\t")
 
 rule all:
     input:
-        "results/beta_div/effect_size_plot.html"
+        "results/beta_div/effect_size_plot.html",
+        "results/alpha_div/effect_size_plot.html"
 
 configfile: "config/config.yaml"
 
+include: "rules/preprocess_data.smk"
+include: "rules/alpha_diversity.smk"
 include: "rules/beta_diversity.smk"
 include: "rules/evident.smk"
 include: "rules/visualization.smk"

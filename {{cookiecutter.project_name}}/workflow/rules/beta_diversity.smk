@@ -5,22 +5,6 @@ import numpy as np
 from skbio.diversity import beta_diversity
 import unifrac
 
-rule rarefy:
-    input:
-        "{{cookiecutter.feature_table_file}}"
-    output:
-        "results/rarefied_table.biom"
-    log:
-        "logs/rarefy.log"
-    run:
-        table = biom.load_table(input[0])
-        depths = table.sum(axis="sample")
-        rare_depth = round(np.quantile(depths, config["rarefaction_depth_percentile"]/100))
-        table_rare = table.subsample(rare_depth)
-
-        with biom.util.biom_open(output[0], "w") as f:
-            table_rare.to_hdf5(f, "rarefy")
-
 
 ## NON-PHYLOGENETIC METRICS ##
 rule rpca:

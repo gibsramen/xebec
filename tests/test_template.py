@@ -38,4 +38,5 @@ def test_bake_project(cookies):
     rules_dir = os.path.join(workflow_dir, "rules")
     rules_files = os.listdir(rules_dir)
     assert set(rules_files) == {"alpha_diversity.smk", "beta_diversity.smk",
-                                "evident.smk", "visualization.smk"}
+                                "evident.smk", "visualization.smk",
+                                "preprocess_data.smk"}
