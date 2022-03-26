@@ -4,7 +4,6 @@ from bokeh.plotting import output_file, save, figure
 import seaborn as sns
 
 
-
 rule plot_effect_sizes:
     input:
         "results/{diversity_type}/all_metrics_effect_sizes.tsv"
@@ -20,7 +19,7 @@ rule plot_effect_sizes:
             non_phylo_metrics = alpha_metrics.query("phylogenetic == 'non_phylo'")["diversity_metric"]
             phylo_metrics = alpha_metrics.query("phylogenetic == 'phylo'")["diversity_metric"]
 
-            diversity_metric_order = alpha_metrics["diversity_type"].tolist()
+            diversity_metric_order = alpha_metrics["diversity_metric"].tolist()
 
         palette = dict(zip(
             non_phylo_metrics,
@@ -34,7 +33,7 @@ rule plot_effect_sizes:
         df = pd.read_table(input[0], sep="\t")
         output_file(output[0])
         p1 = generate_interactive(df, palette, diversity_metric_order, "cohens_d")
-        p2 = generate_interactive(df, "cohens_f")
+        p2 = generate_interactive(df, palette, diversity_metric_order, "cohens_f")
         layout = gridplot([[p1, p2]], sizing_mode="scale_width",
                           toolbar_location="right")
         save(layout, title="xebec")

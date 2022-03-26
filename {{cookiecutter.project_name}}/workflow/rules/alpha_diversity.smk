@@ -1,4 +1,6 @@
 import os
+
+from bp import parse_newick, to_skbio_treenode
 import pandas as pd
 from skbio.diversity import alpha_diversity
 from skbio import TreeNode
@@ -38,7 +40,9 @@ rule phylo_alpha_div:
     run:
         os.makedirs(params[0], exist_ok=True)
         table = biom.load_table(input["tbl_file"])
-        tree = TreeNode.read(input["tree_file"])
+        with open(output[0]) as f:
+            tree = parse_newick(f.readline())
+        tree = to_skbio_treenode(tree)
 
         alpha_div = alpha_diversity(
             metric=wildcards.alpha_div_metric,

@@ -1,5 +1,5 @@
 diversity_metric	phylogenetic
-observed_features	non_phylo
+observed_otus	non_phylo
 shannon	non_phylo
 pielou_e	non_phylo
 chao1	non_phylo

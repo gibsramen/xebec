@@ -20,7 +20,7 @@ rule calculate_alpha_div_effect_sizes:
         md = pd.read_table(input["md_file"], sep="\t", index_col=0)
         data = pd.read_table(input["ad_file"], sep="\t", index_col=0).squeeze()
 
-        adh = AlphaDiversityHandler(dm, data)
+        adh = AlphaDiversityHandler(data, md)
         res = effect_size_by_category(adh, md.columns).to_dataframe()
         xebec_logger.info(f"\n{res.head()}")
         res.to_csv(output[0], sep="\t", index=True)
@@ -58,7 +58,7 @@ rule calculate_alpha_div_pairwise_effect_sizes:
         md = pd.read_table(input["md_file"], sep="\t", index_col=0)
         data = pd.read_table(input["ad_file"], sep="\t", index_col=0).squeeze()
 
-        adh = AlphaDiversityHandler(dm, data)
+        adh = AlphaDiversityHandler(data, md)
         res = pairwise_effect_size_by_category(adh, md.columns).to_dataframe()
         xebec_logger.info(f"\n{res.head()}")
         res.to_csv(output[0], sep="\t", index=True)
