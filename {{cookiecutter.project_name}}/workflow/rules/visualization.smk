@@ -3,19 +3,6 @@ from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.plotting import output_file, save, figure
 import seaborn as sns
 
-non_phylo_metrics = beta_metrics.query("phylogenetic == 'non_phylo'")["diversity_metric"]
-phylo_metrics = beta_metrics.query("phylogenetic == 'phylo'")["diversity_metric"]
-
-palette = dict(zip(
-    non_phylo_metrics,
-    sns.color_palette("Reds", len(non_phylo_metrics)).as_hex()
-))
-palette.update(dict(zip(
-    phylo_metrics,
-    sns.color_palette("Blues", len(phylo_metrics)).as_hex()
-)))
-diversity_metric_order = ["braycurtis", "jaccard", "rpca",
-                          "unweighted_unifrac", "weighted_unifrac", "phylo_rpca"]
 
 
 rule plot_effect_sizes:
@@ -24,16 +11,36 @@ rule plot_effect_sizes:
     output:
         "results/{diversity_type}/effect_size_plot.html"
     run:
+        if wildcards.diversity_type == "beta_div":
+            non_phylo_metrics = beta_metrics.query("phylogenetic == 'non_phylo'")["diversity_metric"]
+            phylo_metrics = beta_metrics.query("phylogenetic == 'phylo'")["diversity_metric"]
+
+            diversity_metric_order = beta_metrics["diversity_metric"].tolist()
+        else:
+            non_phylo_metrics = alpha_metrics.query("phylogenetic == 'non_phylo'")["diversity_metric"]
+            phylo_metrics = alpha_metrics.query("phylogenetic == 'phylo'")["diversity_metric"]
+
+            diversity_metric_order = alpha_metrics["diversity_type"].tolist()
+
+        palette = dict(zip(
+            non_phylo_metrics,
+            sns.color_palette("Reds", len(non_phylo_metrics)).as_hex()
+        ))
+        palette.update(dict(zip(
+            phylo_metrics,
+            sns.color_palette("Blues", len(phylo_metrics)).as_hex()
+        )))
+
         df = pd.read_table(input[0], sep="\t")
         output_file(output[0])
-        p1 = generate_interactive(df, "cohens_d")
+        p1 = generate_interactive(df, palette, diversity_metric_order, "cohens_d")
         p2 = generate_interactive(df, "cohens_f")
         layout = gridplot([[p1, p2]], sizing_mode="scale_width",
                           toolbar_location="right")
         save(layout, title="xebec")
 
 
-def generate_interactive(df, metric="cohens_d"):
+def generate_interactive(df, palette, diversity_metric_order, metric="cohens_d"):
     """Generated boxplots for different diversity metrics."""
     _df = df.copy().query("metric == @metric")
     order = list(

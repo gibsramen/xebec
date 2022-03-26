@@ -7,6 +7,25 @@ import pandas as pd
 from skbio import DistanceMatrix
 
 
+rule calculate_alpha_div_effect_sizes:
+    input:
+        md_file = "results/filtered_metadata.tsv",
+        ad_file = "results/alpha_div/{is_phylo}/{alpha_div_metric}/vector.tsv"
+    output:
+        "results/alpha_div/{is_phylo}/{alpha_div_metric}/effect_sizes.tsv"
+    log:
+        "logs/calculate_alpha_div_effect_sizes.{is_phylo}.{alpha_div_metric}.log"
+    run:
+        xebec_logger = get_logger(log[0])
+        md = pd.read_table(input["md_file"], sep="\t", index_col=0)
+        data = pd.read_table(input["ad_file"], sep="\t", index_col=0).squeeze()
+
+        adh = AlphaDiversityHandler(dm, data)
+        res = effect_size_by_category(adh, md.columns).to_dataframe()
+        xebec_logger.info(f"\n{res.head()}")
+        res.to_csv(output[0], sep="\t", index=True)
+
+
 rule calculate_beta_div_effect_sizes:
     input:
         md_file = "results/filtered_metadata.tsv",
@@ -22,6 +41,25 @@ rule calculate_beta_div_effect_sizes:
 
         bdh = BetaDiversityHandler(dm, md)
         res = effect_size_by_category(bdh, md.columns).to_dataframe()
+        xebec_logger.info(f"\n{res.head()}")
+        res.to_csv(output[0], sep="\t", index=True)
+
+
+rule calculate_alpha_div_pairwise_effect_sizes:
+    input:
+        md_file = "results/filtered_metadata.tsv",
+        dm_file = "results/alpha_div/{is_phylo}/{alpha_div_metric}/vector.tsv"
+    output:
+        "results/alpha_div/{is_phylo}/{alpha_div_metric}/pairwise_effect_sizes.tsv"
+    log:
+        "logs/calculate_alpha_div_pairwise_effect_sizes.{is_phylo}.{alpha_div_metric}.log"
+    run:
+        xebec_logger = get_logger(log[0])
+        md = pd.read_table(input["md_file"], sep="\t", index_col=0)
+        data = pd.read_table(input["ad_file"], sep="\t", index_col=0).squeeze()
+
+        adh = AlphaDiversityHandler(dm, data)
+        res = pairwise_effect_size_by_category(adh, md.columns).to_dataframe()
         xebec_logger.info(f"\n{res.head()}")
         res.to_csv(output[0], sep="\t", index=True)
 
@@ -67,6 +105,14 @@ def concatenate_metric_dataframes(files):
     total_df = total_df.reset_index(level=("phylogenetic", "diversity_metric"))
     return total_df
 
+alpha_div_effect_sizes = [
+    f"results/alpha_div/{row['phylogenetic']}/{row['diversity_metric']}/effect_sizes.tsv"
+    for i, row in alpha_metrics.iterrows()
+]
+alpha_div_pw_effect_sizes = [
+    f"results/alpha_div/{row['phylogenetic']}/{row['diversity_metric']}/pairwise_effect_sizes.tsv"
+    for i, row in alpha_metrics.iterrows()
+]
 
 beta_div_effect_sizes = [
     f"results/beta_div/{row['phylogenetic']}/{row['diversity_metric']}/effect_sizes.tsv"
@@ -80,6 +126,18 @@ beta_div_pw_effect_sizes = [
 
 # Can't use double brace syntax for Snakemake wildcards in expand because this notation is
 # used for cookiecutter.
+rule concatenate_alpha_div_effect_sizes:
+    input:
+        alpha_div_effect_sizes
+    output:
+        "results/alpha_div/all_metrics_effect_sizes.tsv"
+    log:
+        "logs/concatenate_alpha_div_effect_sizes.log"
+    run:
+        all_metrics_df = concatenate_metric_dataframes(input)
+        all_metrics_df.to_csv(output[0], sep="\t", index=False)
+
+
 rule concatenate_beta_div_effect_sizes:
     input:
         beta_div_effect_sizes
@@ -87,6 +145,18 @@ rule concatenate_beta_div_effect_sizes:
         "results/beta_div/all_metrics_effect_sizes.tsv"
     log:
         "logs/concatenate_beta_div_effect_sizes.log"
+    run:
+        all_metrics_df = concatenate_metric_dataframes(input)
+        all_metrics_df.to_csv(output[0], sep="\t", index=False)
+
+
+rule concatenate_alpha_div_pairwise_effect_sizes:
+    input:
+        alpha_div_pw_effect_sizes
+    output:
+        "results/alpha_div/all_metrics_pairwise_effect_sizes.tsv"
+    log:
+        "logs/concatenate_alpha_div_pairwise_effect_sizes.log"
     run:
         all_metrics_df = concatenate_metric_dataframes(input)
         all_metrics_df.to_csv(output[0], sep="\t", index=False)
