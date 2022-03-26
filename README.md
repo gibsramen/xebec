@@ -45,14 +45,17 @@ diversity-benchmark/
 ├── config
 │   ├── alpha_div_metrics.tsv
 │   ├── beta_div_metrics.tsv
-│   ├── config.yaml
+│   └── config.yaml
 └── workflow
     ├── rules
     │   ├── alpha_diversity.smk
     │   ├── beta_diversity.smk
     │   ├── evident.smk
+    │   ├── preprocess_data.smk
     │   └── visualization.smk
     └── Snakefile
+
+3 directories, 9 files
 ```
 
 ## Usage
@@ -66,13 +69,13 @@ snakemake --cores 1
 
 You should see the Snakemake pipeline start running the jobs.
 If this pipeline runs sucessfully, the processed results will be located at `<project_name>/results`.
-Open the `results/beta_div/effect_size_plot.html` webpage and you should be taken to an interactive visualization.
+Open the `results/beta_div/effect_size_plot.html` and `results/alpha_div/effect_size_plot.html` webpages and you should be taken to an interactive visualization.
 On the left are the effect sizes of diversity differences for binary categories.
 On the right are the effect sizes of diversity differences for multi-class categories.
 You can move around these plots, zoom in, as well as toggle the visibility of diversity metrics by clicking on the legend.
 These plots are generated using [Bokeh](https://github.com/bokeh/bokeh).
 
-![Bokeh](https://raw.githubusercontent.com/gibsramen/xebec/main/imgs/bokeh.png)
+![Bokeh](imgs/bokeh.png)
 
 ## Workflow Overview
 
@@ -85,4 +88,4 @@ xebec performs four main steps, some of which have substeps.
 
 An overview of the DAG is shown below:
 
-![xebec DAG](https://raw.githubusercontent.com/gibsramen/xebec/main/imgs/dag.png)
+![xebec DAG](imgs/dag.png)
