@@ -14,7 +14,7 @@ rule non_phylo_alpha_div:
     log:
         "logs/{alpha_div_metric}.log"
     params:
-        "results/beta_div/phylo/{alpha_div_metric}"
+        "results/alpha_div/non_phylo/{alpha_div_metric}"
     run:
         os.makedirs(params[0], exist_ok=True)
         table = biom.load_table(input[0])
@@ -36,11 +36,12 @@ rule phylo_alpha_div:
     log:
         "logs/{alpha_div_metric}.log"
     params:
-        "results/beta_div/phylo/{alpha_div_metric}"
+        "results/alpha_div/phylo/{alpha_div_metric}"
     run:
         os.makedirs(params[0], exist_ok=True)
         table = biom.load_table(input["tbl_file"])
-        with open(output[0]) as f:
+
+        with open(input["tree_file"]) as f:
             tree = parse_newick(f.readline())
         tree = to_skbio_treenode(tree)
 
