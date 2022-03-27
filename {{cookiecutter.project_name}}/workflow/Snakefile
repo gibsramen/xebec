@@ -13,6 +13,25 @@ phylo_alpha_metrics = alpha_metrics.query("phylogenetic == 'phylo'")["diversity_
 non_phylo_beta_metrics = beta_metrics.query("phylogenetic == 'non_phylo'")["diversity_metric"]
 phylo_beta_metrics = beta_metrics.query("phylogenetic == 'phylo'")["diversity_metric"]
 
+alpha_div_effect_sizes = [
+    f"results/alpha_div/{row['phylogenetic']}/{row['diversity_metric']}/effect_sizes.tsv"
+    for i, row in alpha_metrics.iterrows()
+]
+alpha_div_pw_effect_sizes = [
+    f"results/alpha_div/{row['phylogenetic']}/{row['diversity_metric']}/pairwise_effect_sizes.tsv"
+    for i, row in alpha_metrics.iterrows()
+]
+
+beta_div_effect_sizes = [
+    f"results/beta_div/{row['phylogenetic']}/{row['diversity_metric']}/effect_sizes.tsv"
+    for i, row in beta_metrics.iterrows()
+]
+beta_div_pw_effect_sizes = [
+    f"results/beta_div/{row['phylogenetic']}/{row['diversity_metric']}/pairwise_effect_sizes.tsv"
+    for i, row in beta_metrics.iterrows()
+]
+
+
 rule all:
     input:
         "results/beta_div/effect_size_plot.html",
