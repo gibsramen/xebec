@@ -6,20 +6,10 @@ import seaborn as sns
 
 
 def generate_interactive_effect_sizes(es_metric: str):
-    """Generate boxplots for different diversity metrics
-
-    Parameters
-    ----------
-    df: pd.DataFrame
-        DataFrame of effect sizes by column and diversity metric.
-    palette: dict
-        Color palette to use for diversity metric scatter points.
-    diversity_metric_order: list
-        Order of strings in legend
-    es_metric: str
-        Effect size metric to plot
-    """
+    """Generate boxplots for different diversity metrics"""
     _df = df.copy().query("metric == @es_metric")
+
+    # Order columns by median effect size
     order = list(
         _df.groupby("column")
         .median()
@@ -31,6 +21,7 @@ def generate_interactive_effect_sizes(es_metric: str):
     _df["column"] = _df["column"].cat.set_categories(order)
     _df = _df.sort_values(by="column")
 
+    # Sort diversity metrics by non-phylo -> phylo
     _df["diversity_metric"] = _df["diversity_metric"].astype("category")
     _df["diversity_metric"] = (
         _df["diversity_metric"]
@@ -100,8 +91,8 @@ def generate_interactive_effect_sizes(es_metric: str):
     seg_1 = p.segment(**seg_args, x0="upper", x1="q3")
     seg_2 = p.segment(**seg_args, x0="lower", x1="q1")
 
-    whisker_args = {"source": box_source, "y": "column", "height": 0.5, "width": 0.00001,
-                    "line_color": "black", "line_width": lw}
+    whisker_args = {"source": box_source, "y": "column", "height": 0.5,
+                    "width": 0.00001, "line_color": "black", "line_width": lw}
     whisk_1 = p.rect(**whisker_args, x="lower")
     whisk_2 = p.rect(**whisker_args, x="upper")
 
