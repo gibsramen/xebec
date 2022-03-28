@@ -50,12 +50,15 @@ diversity-benchmark/
     ├── rules
     │   ├── alpha_diversity.smk
     │   ├── beta_diversity.smk
+    │   ├── common.smk
     │   ├── evident.smk
     │   ├── preprocess_data.smk
     │   └── visualization.smk
+    ├── scripts
+    │   └── interactive_effect_sizes.py
     └── Snakefile
 
-3 directories, 9 files
+4 directories, 11 files
 ```
 
 ## Usage
