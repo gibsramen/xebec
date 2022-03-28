@@ -27,7 +27,7 @@ rule rpca:
 
 rule non_phylo_beta_div:
     input:
-        "results/rarefied_table.biom",
+        "results/rarefied_table.biom"
     output:
         "results/beta_div/non_phylo/{beta_div_metric}/distance-matrix.tsv"
     log:
