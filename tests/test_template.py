@@ -44,4 +44,5 @@ def test_bake_project(cookies):
 
     scripts_dir = os.path.join(workflow_dir, "scripts")
     scripts_files = os.listdir(scripts_dir)
-    assert set(scripts_files) == {"interactive_effect_sizes.py"}
+    assert set(scripts_files) == {"interactive_effect_sizes.py",
+                                  "interactive_pw_effect_sizes.py"}
