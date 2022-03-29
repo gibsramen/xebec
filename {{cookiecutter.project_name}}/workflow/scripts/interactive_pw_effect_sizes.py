@@ -98,6 +98,7 @@ p.scatter(
     line_width=0.5,
     line_color="black",
     fill_color="color",
+    legend_field="diversity_metric",
     marker="marker"
 )
 
