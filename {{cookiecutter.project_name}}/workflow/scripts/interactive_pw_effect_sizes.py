@@ -21,6 +21,10 @@ palette.update(dict(zip(
 
 df = pd.read_table(snakemake.input[0], sep="\t")
 df["comparison"] = df["group_1"] + " vs. " + df["group_2"]
+df["color"] = df["diversity_metric"].map(palette)
+df["marker"] = df["phylogenetic"].map(
+    {"phylo": "triangle", "non_phylo": "circle"}
+)
 all_cols = df["column"].unique().tolist()
 
 chosen_col = Select(options=all_cols, value=all_cols[0], title="Column")
@@ -78,17 +82,31 @@ hover_boxes.formatters = {"@q1": "numeral"}
 p = figure(
     tools=["pan", "reset", "box_zoom", hover_boxes, hover_points],
     y_range=order,
-    width=800,
+    sizing_mode="stretch_both"
 )
 
 big_source = ColumnDataSource(df)
+col_source = ColumnDataSource(col_df)
 box_source = ColumnDataSource(box_df)
+
+p.scatter(
+    source=col_source,
+    y="comparison",
+    x="effect_size",
+    size=10,
+    name="points",
+    line_width=0.5,
+    line_color="black",
+    fill_color="color",
+    marker="marker"
+)
 
 callback = (
     CustomJS(
     args=dict(
         big_source=big_source,
         box_source=box_source,
+        col_source=col_source,
         yr=p.y_range
     ),
     code="""
@@ -121,10 +139,12 @@ function quantile(arr, q) {
 const data = big_source.data;
 const colArray = data['column'];
 
-const compPhyloArray = [];  // phylogenetic
-const compDivMetricArray = [];  // diversity_metric
-const compESArray = [];  // effect_size
-const compCompArray = []; // comparison
+const colPhyloArray = [];  // phylogenetic
+const colDivMetricArray = [];  // diversity_metric
+const colESArray = [];  // effect_size
+const colCompArray = []; // comparison
+const colColorArray = []; // color
+const colMarkerArray = []; // marker
 
 const compCompObj = {};
 
@@ -132,19 +152,28 @@ for (let i = 0; i < colArray.length; i++) {
     if (colArray[i] == cb_obj.value) {
         let phylo = data['phylogenetic'][i];
         let comp = data['comparison'][i];
-        let divMetric = data['phylogenetic'][i];
+        let divMetric = data['diversity_metric'][i];
         let effectSize = data['effect_size'][i];
+        let color = data['color'][i];
+        let marker = data['marker'][i];
 
         if (comp in compCompObj) {
             compCompObj[comp].push(effectSize)
         } else {
             compCompObj[comp] = [effectSize];
         }
+
+        colPhyloArray.push(phylo);
+        colCompArray.push(comp);
+        colDivMetricArray.push(divMetric);
+        colESArray.push(effectSize);
+        colColorArray.push(color);
+        colMarkerArray.push(marker);
     } else {
     }
 }
 
-const uniqueComps = [...new Set(compCompArray)]; 
+const uniqueComps = [...new Set(colCompArray)];
 
 const newBoxSource = {
     'comparison': [],
@@ -178,15 +207,23 @@ for (let [key, values] of Object.entries(compCompObj)) {
 }
 
 box_source.data = newBoxSource;
+col_source.data = {
+    'phylogenetic': colPhyloArray,
+    'diversity_metric': colDivMetricArray,
+    'color': colColorArray,
+    'marker': colMarkerArray,
+    'effect_size': colESArray,
+    'comparison': colCompArray
+};
 // Need to update y_range and factors
 yr.end = i - 1;
 yr.factors = newBoxSource['comparison'];
 box_source.change.emit();
+col_source.change.emit();
 """
     )
 )
 chosen_col.js_on_change("value", callback)
-
 
 p.background_fill_color = "#EEEEEE"
 p.grid[0].level = "image"
@@ -219,6 +256,16 @@ whisk_2 = p.rect(**whisker_args, x="upper")
 # https://stackoverflow.com/a/58620263
 for patch in [boxes_1, boxes_2, seg_1, seg_2, whisk_1, whisk_2]:
     patch.level = "underlay"
+
+for ax in [p.xaxis, p.yaxis]:
+    ax.axis_label_text_font_size = "15pt"
+    ax.axis_label_text_font_style = "normal"
+    ax.major_tick_line_width = 0
+
+p.title = "Pairwise Comparisons"
+p.title.text_font_size = "20pt"
+p.yaxis.major_label_text_font_size = "12pt"
+p.xaxis.major_label_text_font_size = "10pt"
 
 p.xaxis.axis_label = "Cohen's d"
 controls = [chosen_col]
