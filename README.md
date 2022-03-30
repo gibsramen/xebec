@@ -55,10 +55,11 @@ diversity-benchmark/
     │   ├── preprocess_data.smk
     │   └── visualization.smk
     ├── scripts
-    │   └── interactive_effect_sizes.py
+    │   ├── interactive_effect_sizes.py
+    │   └── interactive_pw_effect_sizes.py
     └── Snakefile
 
-4 directories, 11 files
+4 directories, 12 files
 ```
 
 ## Usage

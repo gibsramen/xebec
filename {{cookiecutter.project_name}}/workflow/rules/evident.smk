@@ -48,7 +48,7 @@ rule calculate_beta_div_effect_sizes:
 rule calculate_alpha_div_pairwise_effect_sizes:
     input:
         md_file = "results/filtered_metadata.tsv",
-        dm_file = "results/alpha_div/{is_phylo}/{alpha_div_metric}/vector.tsv"
+        ad_file = "results/alpha_div/{is_phylo}/{alpha_div_metric}/vector.tsv"
     output:
         "results/alpha_div/{is_phylo}/{alpha_div_metric}/pairwise_effect_sizes.tsv"
     log:
@@ -104,24 +104,6 @@ def concatenate_metric_dataframes(files):
     total_df = pd.concat(all_dfs, keys=all_keys, names=["phylogenetic", "diversity_metric"])
     total_df = total_df.reset_index(level=("phylogenetic", "diversity_metric"))
     return total_df
-
-alpha_div_effect_sizes = [
-    f"results/alpha_div/{row['phylogenetic']}/{row['diversity_metric']}/effect_sizes.tsv"
-    for i, row in alpha_metrics.iterrows()
-]
-alpha_div_pw_effect_sizes = [
-    f"results/alpha_div/{row['phylogenetic']}/{row['diversity_metric']}/pairwise_effect_sizes.tsv"
-    for i, row in alpha_metrics.iterrows()
-]
-
-beta_div_effect_sizes = [
-    f"results/beta_div/{row['phylogenetic']}/{row['diversity_metric']}/effect_sizes.tsv"
-    for i, row in beta_metrics.iterrows()
-]
-beta_div_pw_effect_sizes = [
-    f"results/beta_div/{row['phylogenetic']}/{row['diversity_metric']}/pairwise_effect_sizes.tsv"
-    for i, row in beta_metrics.iterrows()
-]
 
 
 # Can't use double brace syntax for Snakemake wildcards in expand because this notation is
