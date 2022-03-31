@@ -77,7 +77,6 @@ hover_boxes.tooltips = [
     ("50%", "@q2{0.000}"),
     ("75%", "@q3{0.000}")
 ]
-hover_boxes.formatters = {"@q1": "numeral"}
 
 p = figure(
     tools=["pan", "reset", "box_zoom", hover_boxes, hover_points],
@@ -188,7 +187,7 @@ const newBoxSource = {
     'qmin': [],
 };
 
-var i = 0;
+var i = 1;
 for (let [key, values] of Object.entries(compCompObj)) {
     newBoxSource['comparison'].push(key);
     let qmax = Math.max(...values);
