@@ -12,9 +12,11 @@ md = pd.read_table(snakemake.input["md_file"], sep="\t", index_col=0)
 if snakemake.params["div_type"] == "alpha":
     data = pd.read_table(snakemake.input["ad_file"], sep="\t", index_col=0).squeeze()
     dh = AlphaDiversityHandler(data, md)
+    div_metric = snakemake.wildcards["alpha_div_metric"]
 elif snakemake.params["div_type"] == "beta":
     data = DistanceMatrix.read(snakemake.input["dm_file"])
     dh = BetaDiversityHandler(data, md)
+    div_metric = snakemake.wildcards["beta_div_metric"]
 else:
     pass
 
@@ -25,7 +27,11 @@ elif snakemake.params["pairwise"] == "False":
 else:
     pass
 
-xebec_logger = get_logger(snakemake.log[0])
+xebec_logger = get_logger(snakemake.log[0], snakemake.rule)
+xebec_logger.info(f"Diversity Type: {snakemake.params['div_type']}")
+xebec_logger.info(f"Diversity Metric: {div_metric}")
+xebec_logger.info(f"Params: {snakemake.params['pairwise']}")
 res = func(dh, md.columns).to_dataframe()
 xebec_logger.info(f"\n{res.head()}")
 res.to_csv(snakemake.output[0], sep="\t", index=False)
+xebec_logger.info(f"Saved to {snakemake.output[0]}!")

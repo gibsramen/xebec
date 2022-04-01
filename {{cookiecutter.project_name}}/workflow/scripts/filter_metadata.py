@@ -4,7 +4,7 @@ import pandas as pd
 from helper import get_logger
 
 
-xebec_logger = get_logger(snakemake.log[0])
+xebec_logger = get_logger(snakemake.log[0], snakemake.rule)
 metadata = pd.read_table(snakemake.input[0], sep="\t", index_col=0)
 xebec_logger.info(f"Original metadata shape: {metadata.shape}")
 
