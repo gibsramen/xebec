@@ -1,9 +1,12 @@
 import os
+import re
 
 import biom
 import numpy as np
 from skbio.diversity import beta_diversity
 import unifrac
+
+
 
 
 ## NON-PHYLOGENETIC METRICS ##
@@ -66,6 +69,7 @@ rule phylo_rpca:
             --min-sample-count 0
         """
 
+unifrac_regex = re.compile("(.*)_unifrac")
 
 rule phylo_beta_div:
     input:
@@ -76,16 +80,10 @@ rule phylo_beta_div:
     log:
         "logs/{beta_div_metric}.log"
     params:
-        "results/beta_div/phylo/{beta_div_metric}"
-    run:
-        os.makedirs(params[0], exist_ok=True)
-
-        if wildcards.beta_div_metric == "unweighted_unifrac":
-            func = unifrac.unweighted_fp32
-        elif wildcards.beta_div_metric == "weighted_unifrac":
-            func = unifrac.weighted_normalized_fp32
-        else:
-            pass
-
-        dm = func(input["tbl_file"], input["tree_file"])
-        dm.write(output[0])
+        out_dir = "results/beta_div/phylo/{beta_div_metric}",
+        method = lambda wildcards: unifrac_regex.search(wildcards.beta_div_metric).groups()[0]
+    shell:
+        """
+        mkdir -p {params.out_dir}
+        ssu -i {input.tbl_file} -t {input.tree_file} -m {params.method} -o {output}
+        """

@@ -30,8 +30,11 @@ else:
 xebec_logger = get_logger(snakemake.log[0], snakemake.rule)
 xebec_logger.info(f"Diversity Type: {snakemake.params['div_type']}")
 xebec_logger.info(f"Diversity Metric: {div_metric}")
-xebec_logger.info(f"Params: {snakemake.params['pairwise']}")
+xebec_logger.info(f"Pairwise: {snakemake.params['pairwise']}")
+
+xebec_logger.info("Calculating effect sizes...")
 res = func(dh, md.columns).to_dataframe()
+xebec_logger.info("Finished calculating effect sizes!")
 xebec_logger.info(f"\n{res.head()}")
 res.to_csv(snakemake.output[0], sep="\t", index=False)
 xebec_logger.info(f"Saved to {snakemake.output[0]}!")
