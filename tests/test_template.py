@@ -37,12 +37,25 @@ def test_bake_project(cookies):
 
     rules_dir = os.path.join(workflow_dir, "rules")
     rules_files = os.listdir(rules_dir)
-    exp_rules = {"alpha_diversity.smk", "beta_diversity.smk",
-                 "evident.smk", "visualization.smk",
-                 "preprocess_data.smk", "common.smk"}
+    exp_rules = {
+        "alpha_diversity.smk",
+        "beta_diversity.smk",
+        "evident.smk",
+        "visualization.smk",
+        "preprocess_data.smk",
+    }
     assert set(rules_files) == exp_rules
 
     scripts_dir = os.path.join(workflow_dir, "scripts")
     scripts_files = os.listdir(scripts_dir)
-    assert set(scripts_files) == {"interactive_effect_sizes.py",
-                                  "interactive_pw_effect_sizes.py"}
+    assert set(scripts_files) == {
+        "interactive_effect_sizes.py",
+        "interactive_pw_effect_sizes.py",
+        "alpha_diversity.py",
+        "beta_diversity.py",
+        "concatenate.py",
+        "filter_metadata.py",
+        "helper.py",
+        "rarefy.py",
+        "run_evident.py"
+    }

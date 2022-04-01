@@ -8,14 +8,18 @@ Snakemake pipeline for microbiome diversity effect size benchmarking
 
 To use xebec, you will need several dependencies:
 
-* snakemake
-* cookiecutter
-* unifrac
-* scikit-bio
-* pandas
-* bokeh
-* evident
-* gemelli
+* [snakemake](https://github.com/snakemake/snakemake)
+* [cookiecutter](https://github.com/cookiecutter/cookiecutter)
+* [biom-format](https://github.com/biocore/biom-format)
+* [unifrac](https://github.com/biocore/unifrac)
+* [iow](https://github.com/biocore/improved-octo-waddle)
+* [scikit-bio](https://github.com/biocore/scikit-bio)
+* [numpy](https://github.com/numpy/numpy)
+* [pandas](https://github.com/pandas-dev/pandas)
+* [seaborn](https://github.com/mwaskom/seaborn)
+* [bokeh](https://github.com/bokeh/bokeh)
+* [evident](https://github.com/gibsramen/evident)
+* [gemelli](https://github.com/biocore/gemelli)
 
 We recommend using `conda`/`mamba` to install these packages when possible.
 Note that at time of writing, evident and gemelli are only available through PyPi.
@@ -34,7 +38,7 @@ You should enter a prompt where you can input the required values to setup xebec
 * `phylogenetic_tree_file`: *absolute* path to the phylogenetic tree file to be used in Newick format.
 * `max_category_levels`: Maximum number of levels in a category to consider. Any categories with more than this number of levels will be dropped (defaults to 5).
 * `min_level_count`: Minimum number of samples in a given level to continue. If a level is represented by fewer than this many samples, this level will be set to NaN (defaults to 3).
-* `rarefaction_depth_percentile`: Depth percentile at which to rarefy for diversity metrics that require it (defaults to 0.1 or 10th percentile).
+* `rarefaction_depth_percentile`: Depth percentile at which to rarefy for diversity metrics that require it (defaults to 10th percentile).
 
 This will create the directory structure needed to run xebec under the project name you specified.
 
@@ -55,11 +59,18 @@ diversity-benchmark/
     │   ├── preprocess_data.smk
     │   └── visualization.smk
     ├── scripts
+    │   ├── alpha_diversity.py
+    │   ├── beta_diversity.py
+    │   ├── concatenate.py
+    │   ├── filter_metadata.py
+    │   ├── helper.py
     │   ├── interactive_effect_sizes.py
-    │   └── interactive_pw_effect_sizes.py
+    │   ├── interactive_pw_effect_sizes.py
+    │   ├── rarefy.py
+    │   └── run_evident.py
     └── Snakefile
 
-4 directories, 12 files
+4 directories, 19 files
 ```
 
 ## Usage
