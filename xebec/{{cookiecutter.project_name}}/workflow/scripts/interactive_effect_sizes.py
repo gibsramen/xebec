@@ -1,8 +1,9 @@
 from bokeh.layouts import gridplot
-from bokeh.models import ColumnDataSource, HoverTool
+from bokeh.models import ColumnDataSource
 from bokeh.plotting import output_file, save, figure
 import pandas as pd
-import seaborn as sns
+
+import xebec.src._visualization as viz
 
 
 def generate_interactive_effect_sizes(es_metric: str):
@@ -32,73 +33,17 @@ def generate_interactive_effect_sizes(es_metric: str):
     cols = _df["column"].unique()
     div_metrics = _df["diversity_metric"].unique()
 
-    hover_points = HoverTool(mode="mouse", names=["points"], attachment="below")
-    hover_points.tooltips = [
-        ("Effect Size", "@effect_size{0.000}"),
-        ("Diversity Metric", "@diversity_metric")
-    ]
-
-    hover_boxes = HoverTool(mode="mouse", names=["boxes"], attachment="above")
-    hover_boxes.tooltips = [
-        ("25%", "@q1{0.000}"),
-        ("50%", "@q2{0.000}"),
-        ("75%", "@q3{0.000}")
-    ]
+    hover_points = viz.HOVER_POINTS
+    hover_boxes = viz.HOVER_BOXES
 
     p = figure(
         tools=["pan", "reset", "box_zoom", hover_points, hover_boxes],
         y_range=order,
         width=800
     )
-    p.background_fill_color = "#EEEEEE"
+    p.background_fill_color = viz.BACKGROUND_FILL_COLOR
 
-    gb = _df.groupby("column")["effect_size"]
-    q1 = gb.quantile(q=0.25)
-    q2 = gb.quantile(q=0.5)
-    q3 = gb.quantile(q=0.75)
-    iqr = q3 - q1
-    upper = q3 + 1.5*iqr
-    lower = q1 - 1.5*iqr
-
-    qmin = gb.quantile(q=0)
-    qmax = gb.quantile(q=1)
-
-    upper = [min([x, y]) for (x, y) in zip(list(qmax), upper)]
-    lower = [max([x, y]) for (x, y) in zip(list(qmin), lower)]
-
-    lw = 2
-
-    box_df = (
-        _df.groupby("column").median()
-        .assign(q1=q1, q2=q2, q3=q3, qmin=qmin, qmax=qmax, upper=upper, lower=lower)
-        .reset_index()
-    )
-    box_source = ColumnDataSource(box_df)
-    box_args = {
-        "source": box_source,
-        "y": "column",
-        "fill_color": "white",
-        "line_color": "black",
-        "line_width": lw,
-        "height": 0.7,
-        "name": "boxes"
-    }
-    boxes_1 = p.hbar(**box_args, left="q1", right="q2")
-    boxes_2 = p.hbar(**box_args, left="q2", right="q3")
-
-    seg_args = {"source": box_source, "y0": "column", "y1": "column",
-                "line_color": "black", "line_width": lw}
-    seg_1 = p.segment(**seg_args, x0="upper", x1="q3")
-    seg_2 = p.segment(**seg_args, x0="lower", x1="q1")
-
-    whisker_args = {"source": box_source, "y": "column", "height": 0.5,
-                    "width": 0.00001, "line_color": "black", "line_width": lw}
-    whisk_1 = p.rect(**whisker_args, x="lower")
-    whisk_2 = p.rect(**whisker_args, x="upper")
-
-    # https://stackoverflow.com/a/58620263
-    for patch in [boxes_1, boxes_2, seg_1, seg_2, whisk_1, whisk_2]:
-        patch.level = "underlay"
+    viz.add_boxplots(p, _df, "column")
 
     for i, (col, col_df) in enumerate(_df.groupby("diversity_metric")):
         source = ColumnDataSource(col_df)
@@ -125,9 +70,6 @@ def generate_interactive_effect_sizes(es_metric: str):
     p.legend.title = "Click Entries to Toggle"
     p.legend.title_text_font_style = "bold"
 
-    p.grid[0].level = "image"
-    p.grid[1].level = "image"
-
     if es_metric == "cohens_d":
         p.xaxis.axis_label = "Cohen's d"
         p.title = "Binary Categories"
@@ -135,14 +77,7 @@ def generate_interactive_effect_sizes(es_metric: str):
         p.title = "Multi-Class Categories"
         p.xaxis.axis_label = "Cohen's f"
 
-    for ax in [p.xaxis, p.yaxis]:
-        ax.axis_label_text_font_size = "15pt"
-        ax.axis_label_text_font_style = "normal"
-        ax.major_tick_line_width = 0
-
-    p.title.text_font_size = "20pt"
-    p.yaxis.major_label_text_font_size = "12pt"
-    p.xaxis.major_label_text_font_size = "10pt"
+    viz.assign_fig_parameters(p)
 
     return p
 
@@ -150,14 +85,7 @@ diversity_metric_order = snakemake.params["all_div_metrics"]
 non_phylo_metrics = snakemake.params["non_phylo_metrics"]
 phylo_metrics = snakemake.params["phylo_metrics"]
 
-palette = dict(zip(
-    non_phylo_metrics,
-    sns.color_palette("Reds", len(non_phylo_metrics)).as_hex()
-))
-palette.update(dict(zip(
-    phylo_metrics,
-    sns.color_palette("Blues", len(phylo_metrics)).as_hex()
-)))
+palette = viz.get_scatter_palette(phylo_metrics, non_phylo_metrics)
 
 df = pd.read_table(snakemake.input[0], sep="\t")
 output_file(snakemake.output[0])

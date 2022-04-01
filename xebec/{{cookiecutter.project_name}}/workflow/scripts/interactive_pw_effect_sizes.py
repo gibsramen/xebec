@@ -1,23 +1,17 @@
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, HoverTool, Select
+from bokeh.models import ColumnDataSource, Select
 from bokeh.models.callbacks import CustomJS
 from bokeh.plotting import output_file, save, figure
 import pandas as pd
-import seaborn as sns
+
+import xebec.src._visualization as viz
 
 
 diversity_metric_order = snakemake.params["all_div_metrics"]
 non_phylo_metrics = snakemake.params["non_phylo_metrics"]
 phylo_metrics = snakemake.params["phylo_metrics"]
 
-palette = dict(zip(
-    non_phylo_metrics,
-    sns.color_palette("Reds", len(non_phylo_metrics)).as_hex()
-))
-palette.update(dict(zip(
-    phylo_metrics,
-    sns.color_palette("Blues", len(phylo_metrics)).as_hex()
-)))
+palette = viz.get_scatter_palette(phylo_metrics, non_phylo_metrics)
 
 df = pd.read_table(snakemake.input[0], sep="\t")
 df["comparison"] = df["group_1"] + " vs. " + df["group_2"]
@@ -38,25 +32,6 @@ col_df["diversity_metric"] = (
 comparisons = col_df["comparison"].unique()
 div_metrics = col_df["diversity_metric"].unique()
 
-gb = col_df.groupby("comparison")["effect_size"]
-q1 = gb.quantile(q=0.25)
-q2 = gb.quantile(q=0.5)
-q3 = gb.quantile(q=0.75)
-iqr = q3 - q1
-upper = q3 + 1.5*iqr
-lower = q1 - 1.5*iqr
-
-qmin = gb.quantile(q=0)
-qmax = gb.quantile(q=1)
-
-upper = [min([x, y]) for (x, y) in zip(list(qmax), upper)]
-lower = [max([x, y]) for (x, y) in zip(list(qmin), lower)]
-
-box_df = (
-    col_df.groupby("comparison").median()
-    .assign(q1=q1, q2=q2, q3=q3, qmin=qmin, qmax=qmax, upper=upper, lower=lower)
-    .reset_index()
-)
 order = list(
     col_df
     .groupby("comparison")
@@ -65,18 +40,8 @@ order = list(
     .index
 )
 
-hover_points = HoverTool(mode="mouse", names=["points"], attachment="below")
-hover_points.tooltips = [
-    ("Effect Size", "@effect_size{0.000}"),
-    ("Diversity Metric", "@diversity_metric")
-]
-
-hover_boxes = HoverTool(mode="mouse", names=["boxes"], attachment="above")
-hover_boxes.tooltips = [
-    ("25%", "@q1{0.000}"),
-    ("50%", "@q2{0.000}"),
-    ("75%", "@q3{0.000}")
-]
+hover_points = viz.HOVER_POINTS
+hover_boxes = viz.HOVER_BOXES
 
 p = figure(
     tools=["pan", "reset", "box_zoom", hover_boxes, hover_points],
@@ -86,7 +51,7 @@ p = figure(
 
 big_source = ColumnDataSource(df)
 col_source = ColumnDataSource(col_df)
-box_source = ColumnDataSource(box_df)
+box_source = viz.add_boxplots(p, col_df, "comparison")
 
 p.scatter(
     source=col_source,
@@ -225,49 +190,11 @@ col_source.change.emit();
 )
 chosen_col.js_on_change("value", callback)
 
-p.background_fill_color = "#EEEEEE"
-p.grid[0].level = "image"
-p.grid[1].level = "image"
-
-lw = 2
-
-box_args = {
-    "source": box_source,
-    "y": "comparison",
-    "fill_color": "white",
-    "line_color": "black",
-    "line_width": lw,
-    "height": 0.7,
-    "name": "boxes"
-}
-boxes_1 = p.hbar(**box_args, left="q1", right="q2")
-boxes_2 = p.hbar(**box_args, left="q2", right="q3")
-
-seg_args = {"source": box_source, "y0": "comparison", "y1": "comparison",
-            "line_color": "black", "line_width": lw}
-seg_1 = p.segment(**seg_args, x0="upper", x1="q3")
-seg_2 = p.segment(**seg_args, x0="lower", x1="q1")
-
-whisker_args = {"source": box_source, "y": "comparison", "height": 0.5, "width": 0.00001,
-                "line_color": "black", "line_width": lw}
-whisk_1 = p.rect(**whisker_args, x="lower")
-whisk_2 = p.rect(**whisker_args, x="upper")
-
-# https://stackoverflow.com/a/58620263
-for patch in [boxes_1, boxes_2, seg_1, seg_2, whisk_1, whisk_2]:
-    patch.level = "underlay"
-
-for ax in [p.xaxis, p.yaxis]:
-    ax.axis_label_text_font_size = "15pt"
-    ax.axis_label_text_font_style = "normal"
-    ax.major_tick_line_width = 0
-
 p.title = "Pairwise Comparisons"
-p.title.text_font_size = "20pt"
-p.yaxis.major_label_text_font_size = "12pt"
-p.xaxis.major_label_text_font_size = "10pt"
-
 p.xaxis.axis_label = "Cohen's d"
+
+viz.assign_fig_parameters(p)
+
 controls = [chosen_col]
 control_panel = column(controls, width=200, height=200)
 layout = row(control_panel, p)
