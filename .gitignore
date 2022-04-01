@@ -1,4 +1,4 @@
 *.swo
 *.swp
-*egg.info/
+*egg-info/
 *__pycache__/

@@ -43,7 +43,7 @@ setup(
     url="https://github.com/gibsramen/xebec",
     version=version,
     license="BSD-3-Clause",
-    packages=find_packages(),
+    packages=["xebec/src"],
     install_requires=[
         "numpy",
         "h5py==3.1.0",
