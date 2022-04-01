@@ -13,17 +13,13 @@ rule calculate_alpha_div_effect_sizes:
         ad_file = "results/alpha_div/{is_phylo}/{alpha_div_metric}/vector.tsv"
     output:
         "results/alpha_div/{is_phylo}/{alpha_div_metric}/effect_sizes.tsv"
+    params:
+        div_type = "alpha",
+        pairwise = "False"
     log:
         "logs/calculate_alpha_div_effect_sizes.{is_phylo}.{alpha_div_metric}.log"
-    run:
-        xebec_logger = get_logger(log[0])
-        md = pd.read_table(input["md_file"], sep="\t", index_col=0)
-        data = pd.read_table(input["ad_file"], sep="\t", index_col=0).squeeze()
-
-        adh = AlphaDiversityHandler(data, md)
-        res = effect_size_by_category(adh, md.columns).to_dataframe()
-        xebec_logger.info(f"\n{res.head()}")
-        res.to_csv(output[0], sep="\t", index=True)
+    script:
+        "../scripts/run_evident.py"
 
 
 rule calculate_beta_div_effect_sizes:
@@ -32,17 +28,13 @@ rule calculate_beta_div_effect_sizes:
         dm_file = "results/beta_div/{is_phylo}/{beta_div_metric}/distance-matrix.tsv"
     output:
         "results/beta_div/{is_phylo}/{beta_div_metric}/effect_sizes.tsv"
+    params:
+        div_type = "beta",
+        pairwise = "False"
     log:
         "logs/calculate_beta_div_effect_sizes.{is_phylo}.{beta_div_metric}.log"
-    run:
-        xebec_logger = get_logger(log[0])
-        md = pd.read_table(input["md_file"], sep="\t", index_col=0)
-        dm = DistanceMatrix.read(input["dm_file"])
-
-        bdh = BetaDiversityHandler(dm, md)
-        res = effect_size_by_category(bdh, md.columns).to_dataframe()
-        xebec_logger.info(f"\n{res.head()}")
-        res.to_csv(output[0], sep="\t", index=True)
+    script:
+        "../scripts/run_evident.py"
 
 
 rule calculate_alpha_div_pairwise_effect_sizes:
@@ -51,17 +43,13 @@ rule calculate_alpha_div_pairwise_effect_sizes:
         ad_file = "results/alpha_div/{is_phylo}/{alpha_div_metric}/vector.tsv"
     output:
         "results/alpha_div/{is_phylo}/{alpha_div_metric}/pairwise_effect_sizes.tsv"
+    params:
+        div_type = "alpha",
+        pairwise = "True"
     log:
         "logs/calculate_alpha_div_pairwise_effect_sizes.{is_phylo}.{alpha_div_metric}.log"
-    run:
-        xebec_logger = get_logger(log[0])
-        md = pd.read_table(input["md_file"], sep="\t", index_col=0)
-        data = pd.read_table(input["ad_file"], sep="\t", index_col=0).squeeze()
-
-        adh = AlphaDiversityHandler(data, md)
-        res = pairwise_effect_size_by_category(adh, md.columns).to_dataframe()
-        xebec_logger.info(f"\n{res.head()}")
-        res.to_csv(output[0], sep="\t", index=True)
+    script:
+        "../scripts/run_evident.py"
 
 
 rule calculate_beta_div_pairwise_effect_sizes:
@@ -70,17 +58,13 @@ rule calculate_beta_div_pairwise_effect_sizes:
         dm_file = "results/beta_div/{is_phylo}/{beta_div_metric}/distance-matrix.tsv"
     output:
         "results/beta_div/{is_phylo}/{beta_div_metric}/pairwise_effect_sizes.tsv"
+    params:
+        div_type = "beta",
+        pairwise = "True"
     log:
         "logs/calculate_beta_div_pairwise_effect_sizes.{is_phylo}.{beta_div_metric}.log"
-    run:
-        xebec_logger = get_logger(log[0])
-        md = pd.read_table(input["md_file"], sep="\t", index_col=0)
-        dm = DistanceMatrix.read(input["dm_file"])
-
-        bdh = BetaDiversityHandler(dm, md)
-        res = pairwise_effect_size_by_category(bdh, md.columns).to_dataframe()
-        xebec_logger.info(f"\n{res.head()}")
-        res.to_csv(output[0], sep="\t", index=True)
+    script:
+        "../scripts/run_evident.py"
 
 
 def concatenate_metric_dataframes(files):
@@ -96,7 +80,7 @@ def concatenate_metric_dataframes(files):
     all_dfs = []
     all_keys = []
     for f in files:
-        this_df = pd.read_table(f, sep="\t", index_col=0)
+        this_df = pd.read_table(f, sep="\t")
         this_keys = get_metric_info(f)
         all_dfs.append(this_df)
         all_keys.append(this_keys)
