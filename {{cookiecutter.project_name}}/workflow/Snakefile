@@ -58,7 +58,6 @@ rule all:
 
 configfile: "config/config.yaml"
 
-include: "rules/common.smk"
 include: "rules/preprocess_data.smk"
 include: "rules/alpha_diversity.smk"
 include: "rules/beta_diversity.smk"
