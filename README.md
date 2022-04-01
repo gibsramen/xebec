@@ -38,7 +38,7 @@ You should enter a prompt where you can input the required values to setup xebec
 * `phylogenetic_tree_file`: *absolute* path to the phylogenetic tree file to be used in Newick format.
 * `max_category_levels`: Maximum number of levels in a category to consider. Any categories with more than this number of levels will be dropped (defaults to 5).
 * `min_level_count`: Minimum number of samples in a given level to continue. If a level is represented by fewer than this many samples, this level will be set to NaN (defaults to 3).
-* `rarefaction_depth_percentile`: Depth percentile at which to rarefy for diversity metrics that require it (defaults to 0.1 or 10th percentile).
+* `rarefaction_depth_percentile`: Depth percentile at which to rarefy for diversity metrics that require it (defaults to 10th percentile).
 
 This will create the directory structure needed to run xebec under the project name you specified.
 
