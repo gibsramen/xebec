@@ -34,6 +34,8 @@ rule plot_effect_sizes:
         all_div_metrics = get_div_metrics,
         non_phylo_metrics = get_non_phylo_div_metrics,
         phylo_metrics = get_phylo_div_metrics
+    log:
+        "logs/plot_{diversity_type}_effect_sizes.log"
     script:
         # The script path is always relative to the Snakefile
         #   containing the directive
@@ -49,6 +51,8 @@ rule plot_pairwise_effect_sizes:
         all_div_metrics = get_div_metrics,
         non_phylo_metrics = get_non_phylo_div_metrics,
         phylo_metrics = get_phylo_div_metrics
+    log:
+        "logs/plot_{diversity_type}_pairwise_effect_sizes.log"
     script:
         # The script path is always relative to the Snakefile
         #   containing the directive
