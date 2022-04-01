@@ -3,7 +3,7 @@ import os
 import biom
 from skbio.diversity import beta_diversity
 
-from helper import get_logger
+from xebec import get_logger
 
 
 xebec_logger = get_logger(snakemake.log[0], snakemake.rule)

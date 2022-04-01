@@ -5,7 +5,7 @@ from bp import parse_newick, to_skbio_treenode
 from skbio.diversity import alpha_diversity
 from skbio import TreeNode
 
-from helper import get_logger
+from xebec import get_logger
 
 
 xebec_logger = get_logger(snakemake.log[0], snakemake.rule)

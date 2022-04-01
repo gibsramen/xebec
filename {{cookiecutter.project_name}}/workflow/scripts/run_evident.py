@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from skbio import DistanceMatrix
 
-from helper import get_logger
+from xebec import get_logger
 
 
 xebec_logger = get_logger(snakemake.log[0], snakemake.rule)

@@ -1,8 +1,8 @@
 TMPDIR := $(shell mktemp -d)
 COOKIE_DIR := $(shell pwd)
-TABLE_FILE := $(shell realpath tests/data/table.biom)
-MD_FILE := $(shell realpath tests/data/metadata.tsv)
-TREE_FILE := $(shell realpath tests/data/tree.tre)
+TABLE_FILE := $(shell realpath xebec/tests/data/table.biom)
+MD_FILE := $(shell realpath xebec/tests/data/metadata.tsv)
+TREE_FILE := $(shell realpath xebec/tests/data/tree.tre)
 
 all: test snaketest
 

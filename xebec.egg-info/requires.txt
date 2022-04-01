@@ -1,0 +1,11 @@
+numpy
+evident>=0.2.0
+gemelli>=0.0.8
+pandas>=1.0.0
+scikit-bio>=0.5.6
+unifrac
+snakemake
+cookiecutter
+seaborn
+bokeh
+click
