@@ -7,6 +7,10 @@ from skbio import DistanceMatrix
 from helper import get_logger
 
 
+xebec_logger = get_logger(snakemake.log[0], snakemake.rule)
+xebec_logger.info(f"Diversity Type: {snakemake.params['div_type']}")
+xebec_logger.info(f"Pairwise: {snakemake.params['pairwise']}")
+
 md = pd.read_table(snakemake.input["md_file"], sep="\t", index_col=0)
 
 if snakemake.params["div_type"] == "alpha":
@@ -27,11 +31,7 @@ elif snakemake.params["pairwise"] == "False":
 else:
     pass
 
-xebec_logger = get_logger(snakemake.log[0], snakemake.rule)
-xebec_logger.info(f"Diversity Type: {snakemake.params['div_type']}")
 xebec_logger.info(f"Diversity Metric: {div_metric}")
-xebec_logger.info(f"Pairwise: {snakemake.params['pairwise']}")
-
 xebec_logger.info("Calculating effect sizes...")
 res = func(dh, md.columns).to_dataframe()
 xebec_logger.info("Finished calculating effect sizes!")

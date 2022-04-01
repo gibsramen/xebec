@@ -1,12 +1,4 @@
-import os
 import re
-
-import biom
-import numpy as np
-from skbio.diversity import beta_diversity
-import unifrac
-
-
 
 
 ## NON-PHYLOGENETIC METRICS ##
@@ -24,7 +16,7 @@ rule rpca:
             --in-biom {input} \
             --output-dir results/beta_div/non_phylo/rpca \
             --n-components {config[n_components]} \
-            --min-sample-count 0
+            --min-sample-count 0 > {log} 2>&1
         """
 
 
@@ -36,17 +28,9 @@ rule non_phylo_beta_div:
     log:
         "logs/{beta_div_metric}.log"
     params:
-        "results/beta_div/non_phylo/{beta_div_metric}"
-    run:
-        os.makedirs(params[0], exist_ok=True)
-        table = biom.load_table(input[0])
-
-        dm = beta_diversity(
-            metric=wildcards["beta_div_metric"],
-            counts=table.matrix_data.todense().T,
-            ids=table.ids("sample")
-        )
-        dm.write(output[0])
+        out_dir = "results/beta_div/non_phylo/{beta_div_metric}"
+    script:
+        "../scripts/beta_diversity.py"
 
 
 ## PHYLOGENETIC METRICS ##
@@ -66,7 +50,7 @@ rule phylo_rpca:
             --in-phylogeny {input.tree_file} \
             --output-dir results/beta_div/phylo/phylo_rpca \
             --n-components {config[n_components]} \
-            --min-sample-count 0
+            --min-sample-count 0 > {log} 2>&1
         """
 
 unifrac_regex = re.compile("(.*)_unifrac")
@@ -85,5 +69,5 @@ rule phylo_beta_div:
     shell:
         """
         mkdir -p {params.out_dir}
-        ssu -i {input.tbl_file} -t {input.tree_file} -m {params.method} -o {output}
+        ssu -i {input.tbl_file} -t {input.tree_file} -m {params.method} -o {output} > {log} 2>&1
         """

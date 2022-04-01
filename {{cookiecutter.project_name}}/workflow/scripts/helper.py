@@ -11,4 +11,7 @@ def get_logger(logfile, rulename):
     fh.setFormatter(formatter)
     xebec_logger.addHandler(fh)
 
+    logging.captureWarnings(True)
+    logging.getLogger("py.warnings").addHandler(fh)
+
     return xebec_logger

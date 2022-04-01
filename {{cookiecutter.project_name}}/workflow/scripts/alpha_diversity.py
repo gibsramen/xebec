@@ -8,8 +8,8 @@ from skbio import TreeNode
 from helper import get_logger
 
 
-div_metric = snakemake.wildcards["alpha_div_metric"]
 xebec_logger = get_logger(snakemake.log[0], snakemake.rule)
+div_metric = snakemake.wildcards["alpha_div_metric"]
 xebec_logger.info(f"Diversity Metric: {div_metric}")
 xebec_logger.info(f"Phylogenetic: {snakemake.params['phylo']}")
 
@@ -27,5 +27,8 @@ if snakemake.params["phylo"] == "True":
     args["tree"] = to_skbio_treenode(tree)
     args["otu_ids"] = table.ids("observation")
 
+xebec_logger.info("Calculating alpha diversity...")
 alpha_div = alpha_diversity(**args)
+xebec_logger.info("Finished calculating alpha diversity!")
 alpha_div.to_csv(snakemake.output[0], sep="\t", index=True)
+xebec_logger.info(f"Saved to {snakemake.output[0]}")

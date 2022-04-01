@@ -1,11 +1,3 @@
-import os
-
-from bp import parse_newick, to_skbio_treenode
-import pandas as pd
-from skbio.diversity import alpha_diversity
-from skbio import TreeNode
-
-
 rule non_phylo_alpha_div:
     input:
         tbl_file = "results/rarefied_table.biom"
