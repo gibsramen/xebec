@@ -8,14 +8,18 @@ Snakemake pipeline for microbiome diversity effect size benchmarking
 
 To use xebec, you will need several dependencies:
 
-* snakemake
-* cookiecutter
-* unifrac
-* scikit-bio
-* pandas
-* bokeh
-* evident
-* gemelli
+* [snakemake](https://github.com/snakemake/snakemake)
+* [cookiecutter](https://github.com/cookiecutter/cookiecutter)
+* [biom-format](https://github.com/biocore/biom-format)
+* [unifrac](https://github.com/biocore/unifrac)
+* [iow](https://github.com/biocore/improved-octo-waddle)
+* [scikit-bio](https://github.com/biocore/scikit-bio)
+* [numpy](https://github.com/numpy/numpy)
+* [pandas](https://github.com/pandas-dev/pandas)
+* [seaborn](https://github.com/mwaskom/seaborn)
+* [bokeh](https://github.com/bokeh/bokeh)
+* [evident](https://github.com/gibsramen/evident)
+* [gemelli](https://github.com/biocore/gemelli)
 
 We recommend using `conda`/`mamba` to install these packages when possible.
 Note that at time of writing, evident and gemelli are only available through PyPi.
@@ -55,11 +59,18 @@ diversity-benchmark/
     │   ├── preprocess_data.smk
     │   └── visualization.smk
     ├── scripts
+    │   ├── alpha_diversity.py
+    │   ├── beta_diversity.py
+    │   ├── concatenate.py
+    │   ├── filter_metadata.py
+    │   ├── helper.py
     │   ├── interactive_effect_sizes.py
-    │   └── interactive_pw_effect_sizes.py
+    │   ├── interactive_pw_effect_sizes.py
+    │   ├── rarefy.py
+    │   └── run_evident.py
     └── Snakefile
 
-4 directories, 12 files
+4 directories, 19 files
 ```
 
 ## Usage
