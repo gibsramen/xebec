@@ -33,6 +33,8 @@ description = (
     "benchmarking."
 )
 
+standalone = ["xebec=xebec.cli.cli:xebec"]
+
 setup(
     name="xebec",
     author="Gibraan Rahman",
@@ -58,5 +60,6 @@ setup(
         "bokeh",
         "click"
     ],
+    entry_points={"console_scripts": standalone},
     classifiers=classifiers,
 )
