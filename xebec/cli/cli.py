@@ -5,6 +5,8 @@ import click
 from cookiecutter.main import cookiecutter
 
 from xebec import COOKIE_DIR
+from xebec.src._validate import (validate_table, validate_metadata,
+                                validate_tree)
 
 
 @click.command(name="xebec")
@@ -22,6 +24,9 @@ from xebec import COOKIE_DIR
                type=int, help="Min number of samples per level per category.")
 @click.option("--rarefy-percentile", default=10, show_default=True,
                type=float, help="Percentile of sample depths at which to rarefy.")
+@click.option("--validate-input/--no-validate-input", default=True,
+              help="Whether to validate input before creating workflow.",
+              show_default=True)
 @click.option("--execute", default=False, type=bool, show_default=True,
                help="Whether to automatically execute the workflow.")
 def xebec(
@@ -32,11 +37,17 @@ def xebec(
     max_category_levels,
     min_level_count,
     rarefy_percentile,
+    validate_input,
     execute
 ):
     feature_table = os.path.abspath(feature_table)
     metadata = os.path.abspath(metadata)
     tree = os.path.abspath(tree)
+
+    if validate_input:
+        validate_table(feature_table)
+        validate_metadata(metadata)
+        validate_tree(tree)
 
     output = PurePath(output)
     project_dir = output.parent
