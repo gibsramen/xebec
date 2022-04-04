@@ -1,6 +1,4 @@
-from bokeh.layouts import gridplot
 from bokeh.models import ColumnDataSource, HoverTool
-import pandas as pd
 import seaborn as sns
 
 
