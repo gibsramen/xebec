@@ -1,17 +1,12 @@
 import os
 
-curr_path = os.path.dirname(__file__)
-table_file = os.path.abspath(os.path.join(curr_path, "data/table.biom"))
-metadata_file = os.path.abspath(os.path.join(curr_path, "data/metadata.tsv"))
-tree_file = os.path.abspath(os.path.join(curr_path, "data/tree.tre"))
 
-
-def test_bake_project(cookies):
+def test_bake_project(cookies, data_paths):
     result = cookies.bake(extra_context={
         "project_name": "example-benchmark",
-        "feature_table_file": table_file,
-        "sample_metadata_file": metadata_file,
-        "phylogenetic_tree_file": tree_file
+        "feature_table_file": data_paths.table_file,
+        "sample_metadata_file": data_paths.metadata_file,
+        "phylogenetic_tree_file": data_paths.tree_file
     })
 
     assert result.exit_code == 0
