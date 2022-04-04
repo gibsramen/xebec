@@ -12,7 +12,9 @@ def validate_table(fpath: os.PathLike):
 
 
 def validate_metadata(fpath: os.PathLike):
-    pd.read_table(fpath, sep="\t", index_col=0)
+    df = pd.read_table(fpath, sep="\t", index_col=0)
+    if df.empty:
+        raise ValueError("Metadata is empty!")
 
 
 def validate_tree(fpath: os.PathLike):
