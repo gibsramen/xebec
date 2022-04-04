@@ -7,7 +7,7 @@ from cookiecutter.main import cookiecutter
 
 from xebec import COOKIE_DIR
 from xebec.src._validate import (validate_table, validate_metadata,
-                                validate_tree)
+                                 validate_tree)
 
 
 @click.command(name="xebec")
