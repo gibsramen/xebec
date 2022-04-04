@@ -1,6 +1,5 @@
 [![Main CI](https://github.com/gibsramen/xebec/actions/workflows/main_ci.yml/badge.svg)](https://github.com/gibsramen/xebec/actions/workflows/main_ci.yml)
 
-
 # xebec
 
 Snakemake pipeline for microbiome diversity effect size benchmarking
