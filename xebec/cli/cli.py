@@ -1,5 +1,6 @@
 import os
 from pathlib import PurePath
+import subprocess
 
 import click
 from cookiecutter.main import cookiecutter
@@ -27,8 +28,9 @@ from xebec.src._validate import (validate_table, validate_metadata,
 @click.option("--validate-input/--no-validate-input", default=True,
               help="Whether to validate input before creating workflow.",
               show_default=True)
-@click.option("--execute", default=False, type=bool, show_default=True,
-               help="Whether to automatically execute the workflow.")
+@click.option("--execute/--no-execute", default=False, type=bool,
+               help="Whether to automatically execute the workflow.",
+               show_default=True)
 def xebec(
     feature_table,
     metadata,
@@ -65,6 +67,10 @@ def xebec(
     }
 
     cookiecutter(COOKIE_DIR, no_input=True, extra_context=args)
+
+    if execute:
+        os.chdir(project_name)
+        subprocess.run(["snakemake", "--cores", "1"], check=True)
 
 
 if __name__ == "__main__":
