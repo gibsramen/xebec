@@ -6,7 +6,9 @@ from bp import parse_newick, to_skbio_treenode
 
 
 def validate_table(fpath: os.PathLike):
-    biom.load_table(fpath)
+    tbl = biom.load_table(fpath)
+    if tbl.is_empty():
+        raise ValueError("Table is empty!")
 
 
 def validate_metadata(fpath: os.PathLike):
