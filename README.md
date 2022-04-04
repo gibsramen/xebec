@@ -54,7 +54,6 @@ diversity-benchmark/
     ├── rules
     │   ├── alpha_diversity.smk
     │   ├── beta_diversity.smk
-    │   ├── common.smk
     │   ├── evident.smk
     │   ├── preprocess_data.smk
     │   └── visualization.smk
@@ -69,8 +68,6 @@ diversity-benchmark/
     │   ├── rarefy.py
     │   └── run_evident.py
     └── Snakefile
-
-4 directories, 19 files
 ```
 
 ## Usage
