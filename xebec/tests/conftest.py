@@ -15,4 +15,4 @@ def data_paths():
         "xebec_paths",
         ["table_file", "metadata_file", "tree_file"]
     )
-    return xebec_paths
+    return xebec_paths(table_file, metadata_file, tree_file)
