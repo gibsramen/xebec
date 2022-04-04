@@ -6,43 +6,62 @@ Snakemake pipeline for microbiome diversity effect size benchmarking
 
 ## Installation
 
-To use xebec, you will need several dependencies:
+To use xebec, you will need several dependencies.
+We recommend using [`mamba`](https://github.com/mamba-org/mamba) to install these packages when possible.
 
-* [snakemake](https://github.com/snakemake/snakemake)
-* [cookiecutter](https://github.com/cookiecutter/cookiecutter)
-* [biom-format](https://github.com/biocore/biom-format)
-* [unifrac](https://github.com/biocore/unifrac)
-* [iow](https://github.com/biocore/improved-octo-waddle)
-* [scikit-bio](https://github.com/biocore/scikit-bio)
-* [numpy](https://github.com/numpy/numpy)
-* [pandas](https://github.com/pandas-dev/pandas)
-* [seaborn](https://github.com/mwaskom/seaborn)
-* [bokeh](https://github.com/bokeh/bokeh)
-* [evident](https://github.com/gibsramen/evident)
-* [gemelli](https://github.com/biocore/gemelli)
+```bash
+mamba install -c conda-forge -c bioconda biom-format h5py==3.1.0 snakemake pandas unifrac scikit-bio bokeh
 
-We recommend using `conda`/`mamba` to install these packages when possible.
-Note that at time of writing, evident and gemelli are only available through PyPi.
-
-From the command line, run the following command:
-
-```
-cookiecutter https://github.com/gibsramen/xebec
+pip install evident>=0.2.0 gemelli>=0.0.8
 ```
 
-You should enter a prompt where you can input the required values to setup xebec.
+To install xebec, run the following command from the command line:
 
-* `project_name`: Name of the directory to create with the Snakemake pipeline files (defaults to `diversity-benchmark`).
-* `feature_table_file`: *absolute* path to the feature table to be used in BIOM format.
-* `sample_metadata_file`: *absolute* path to the sample metadata file to be used in TSV format.
-* `phylogenetic_tree_file`: *absolute* path to the phylogenetic tree file to be used in Newick format.
-* `max_category_levels`: Maximum number of levels in a category to consider. Any categories with more than this number of levels will be dropped (defaults to 5).
-* `min_level_count`: Minimum number of samples in a given level to continue. If a level is represented by fewer than this many samples, this level will be set to NaN (defaults to 3).
-* `rarefaction_depth_percentile`: Depth percentile at which to rarefy for diversity metrics that require it (defaults to 10th percentile).
+```bash
+git clone git@github.com:gibsramen/xebec.git
+cd xebec
+pip install .
+```
 
-This will create the directory structure needed to run xebec under the project name you specified.
+## Usage
 
-The directory structure should be as follows:
+If you run `xebec --help`, you should see the following:
+
+```bash
+$ xebec --help
+Usage: xebec [OPTIONS]
+
+Options:
+  -ft, --feature-table PATH       Feature table in BIOM format.  [required]
+  -m, --metadata PATH             Sample metadata in TSV format.  [required]
+  -t, --tree PATH                 Phylogenetic tree in Newick format.
+                                  [required]
+
+  -o, --output PATH               Output workflow directory.  [required]
+  --max-category-levels INTEGER   Max number of levels in a category.
+                                  [default: 5]
+
+  --min-level-count INTEGER       Min number of samples per level per
+                                  category.  [default: 3]
+
+  --rarefy-percentile FLOAT       Percentile of sample depths at which to
+                                  rarefy.  [default: 10]
+
+  --validate-input / --no-validate-input
+                                  Whether to validate input before creating
+                                  workflow.  [default: True]
+
+  --execute / --no-execute        Whether to automatically execute the
+                                  workflow.  [default: False]
+
+  --help                          Show this message and exit.
+```
+
+To create the workflow structure, pass in the filepaths for the feature table, sample metadata, and phylogenetic tree.
+You must also pass in a path to a directory in which to create the workflow.
+Additionally, you can provide parameters for determining how to process your sample metadata.
+
+After running this command, navigate to the output directory you created. The directory structure should be as follows:
 
 ```
 diversity-benchmark/
@@ -70,8 +89,6 @@ diversity-benchmark/
     └── Snakefile
 ```
 
-## Usage
-
 Navigate inside the `<project_name>` directory.
 To start the pipeline , run the following command:
 
@@ -81,11 +98,8 @@ snakemake --cores 1
 
 You should see the Snakemake pipeline start running the jobs.
 If this pipeline runs sucessfully, the processed results will be located at `<project_name>/results`.
-Open the `results/beta_div/effect_size_plot.html` and `results/alpha_div/effect_size_plot.html` webpages and you should be taken to an interactive visualization.
-On the left are the effect sizes of diversity differences for binary categories.
-On the right are the effect sizes of diversity differences for multi-class categories.
-You can move around these plots, zoom in, as well as toggle the visibility of diversity metrics by clicking on the legend.
-These plots are generated using [Bokeh](https://github.com/bokeh/bokeh).
+Included in the results are the concatenated effect size values as well as interactive plots summarizing the effect sizes for each metadata column for each diversity metric.
+These plots are generated using [Bokeh](https://github.com/bokeh/bokeh) and can be visualized in any modern web browser.
 
 ![Bokeh](imgs/bokeh.png)
 
@@ -101,3 +115,20 @@ xebec performs four main steps, some of which have substeps.
 An overview of the DAG is shown below:
 
 ![xebec DAG](imgs/dag.png)
+
+## Configuration
+
+### Diversity Metrics
+
+xebec allows configuration of what alpha and beta diversity metrics are included in the workflow.
+To add or remove metrics, modify the `config/alpha_div_metrics.yml` and `config/beta_div_metrics.yml` files.
+For alpha diversity, any metric that can be passed into `skbio.alpha_diversity` should work.
+For beta diversity, any non-phylogenetic metric that can be passed into `skbio.beta_diversity` should work.
+Valid phylogenetic beta diversity are those that can be passed into [Striped UniFrac](https://github.com/biocore/unifrac).
+Make sure that any additional diversity metrics are annotated with `phylo` or `non_phylo` so xebec knows how to process them.
+
+### Snakemake Options
+
+The xebec workflow can be decorated with many configuration options available in Snakemake, including resource usage and HPC scheduling.
+We recommend reading through the [Snakemake documentation](https://snakemake.readthedocs.io/en/stable/index.html) for details on these options.
+Note that some of these options may require creating new configuration files.
