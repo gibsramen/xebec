@@ -2,7 +2,7 @@ import logging
 import os
 
 
-__version__ = "0.4.0"
+__version__ = "0.4.2"
 COOKIE_DIR = os.path.dirname(__file__)
 
 

@@ -12,7 +12,7 @@ To use xebec, you will need several dependencies.
 We recommend using [`mamba`](https://github.com/mamba-org/mamba) to install these packages when possible.
 
 ```bash
-mamba install -c conda-forge -c bioconda biom-format h5py==3.1.0 snakemake pandas unifrac scikit-bio bokeh
+mamba install -c conda-forge -c bioconda biom-format h5py==3.1.0 snakemake pandas unifrac scikit-bio bokeh cookiecutter unifrac-binaries
 
 pip install evident>=0.2.0 gemelli>=0.0.8
 ```
