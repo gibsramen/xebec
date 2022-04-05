@@ -1,3 +1,6 @@
 *.swo
 *.swp
+*egg-info/
 *__pycache__/
+dist/
+build/

@@ -1,0 +1,4 @@
+n_components: 3
+max_category_levels: {{cookiecutter.max_category_levels}}
+min_level_count: {{cookiecutter.min_level_count}}
+rarefaction_depth_percentile: {{cookiecutter.rarefaction_depth_percentile}}

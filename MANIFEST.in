@@ -1,0 +1,3 @@
+include xebec/cookiecutter.json
+graft xebec/{{cookiecutter.project_name}}
+graft xebec/js

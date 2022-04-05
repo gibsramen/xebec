@@ -4,9 +4,11 @@ on:
   pull_request:
     branches:
       - main
+      - develop
   push:
     branches:
       - main
+      - develop
 
 jobs:
   build:
@@ -39,19 +41,14 @@ jobs:
         shell: bash -l {0}
         run: pip install gemelli evident
 
+      - name: Install xebec
+        shell: bash -l {0}
+        run: pip install -e .
+
       - name: Run tests
         shell: bash -l {0}
         run: make test
 
       - name: Run Snakemake
         shell: bash -l {0}
-        run: |
-          TMPDIR=$(mktemp -d)
-          COOKIE_DIR=$(pwd)
-          TABLE_FILE=$(realpath tests/data/table.biom)
-          MD_FILE=$(realpath tests/data/metadata.tsv)
-          TREE_FILE=$(realpath tests/data/tree.tre)
-          cd ${TMPDIR}
-          cookiecutter --no-input ${COOKIE_DIR} feature_table_file=${TABLE_FILE} sample_metadata_file=${MD_FILE} phylogenetic_tree_file=${TREE_FILE}
-          cd diversity-benchmark
-          snakemake --cores 1
+        run: make snaketest

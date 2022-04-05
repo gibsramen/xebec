@@ -1,0 +1,7 @@
+diversity_metric	phylogenetic
+braycurtis	non_phylo
+jaccard	non_phylo
+rpca	non_phylo
+unweighted_unifrac	phylo
+weighted_normalized_unifrac	phylo
+phylo_rpca	phylo
