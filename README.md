@@ -1,4 +1,5 @@
 [![Main CI](https://github.com/gibsramen/xebec/actions/workflows/main_ci.yml/badge.svg)](https://github.com/gibsramen/xebec/actions/workflows/main_ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/xebec.svg)](https://pypi.org/project/xebec)
 
 # xebec
 
@@ -11,7 +12,7 @@ Snakemake pipeline for microbiome diversity effect size benchmarking
 To use xebec, you will need several dependencies.
 We recommend using [`mamba`](https://github.com/mamba-org/mamba) to install these packages when possible.
 
-```bash
+```
 mamba install -c conda-forge -c bioconda biom-format h5py==3.1.0 snakemake pandas unifrac scikit-bio bokeh cookiecutter unifrac-binaries
 
 pip install evident>=0.2.0 gemelli>=0.0.8
@@ -19,17 +20,15 @@ pip install evident>=0.2.0 gemelli>=0.0.8
 
 To install xebec, run the following command from the command line:
 
-```bash
-git clone git@github.com:gibsramen/xebec.git
-cd xebec
-pip install .
+```
+pip install xebec
 ```
 
 ## Usage
 
 If you run `xebec --help`, you should see the following:
 
-```bash
+```
 $ xebec --help
 Usage: xebec [OPTIONS]
 
@@ -103,7 +102,7 @@ If this pipeline runs sucessfully, the processed results will be located at `<pr
 Included in the results are the concatenated effect size values as well as interactive plots summarizing the effect sizes for each metadata column for each diversity metric.
 These plots are generated using [Bokeh](https://github.com/bokeh/bokeh) and can be visualized in any modern web browser.
 
-![Bokeh](imgs/bokeh.png)
+![Bokeh](https://raw.githubusercontent.com/gibsramen/xebec/main/imgs/bokeh.png)
 
 ## Workflow Overview
 
@@ -116,7 +115,7 @@ xebec performs four main steps, some of which have substeps.
 
 An overview of the DAG is shown below:
 
-![xebec DAG](imgs/dag.png)
+![xebec DAG](https://raw.githubusercontent.com/gibsramen/xebec/main/imgs/dag.png)
 
 ## Configuration
 
