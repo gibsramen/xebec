@@ -45,7 +45,7 @@ setup(
     url="https://github.com/gibsramen/xebec",
     version=version,
     license="BSD-3-Clause",
-    packages=["xebec/src"],
+    packages=["xebec/src", "xebec/cli", "xebec"],
     install_requires=[
         "numpy",
         "h5py==3.1.0",
@@ -60,6 +60,8 @@ setup(
         "bokeh",
         "click"
     ],
+    include_package_data=True,
+    package_data={"": ["xebec/js", "xebec/{{cookiecutter.project_name}}"]},
     entry_points={"console_scripts": standalone},
     classifiers=classifiers,
 )
