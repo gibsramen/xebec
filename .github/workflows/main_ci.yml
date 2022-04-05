@@ -41,6 +41,10 @@ jobs:
         shell: bash -l {0}
         run: pip install gemelli evident
 
+      - name: Install xebec
+        shell: bash -l {0}
+        run: pip install -e
+
       - name: Run tests
         shell: bash -l {0}
         run: make test
