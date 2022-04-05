@@ -1,0 +1,6 @@
+diversity_metric	phylogenetic
+observed_otus	non_phylo
+shannon	non_phylo
+pielou_e	non_phylo
+chao1	non_phylo
+faith_pd	phylo
