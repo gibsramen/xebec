@@ -1,6 +1,7 @@
 rule filter_metadata:
     input:
-        "{{cookiecutter.sample_metadata_file}}"
+        md_file = "{{cookiecutter.sample_metadata_file}}",
+        tbl_file = "{{cookiecutter.feature_table_file}}"
     output:
         "results/filtered_metadata.tsv"
     log:

@@ -31,6 +31,7 @@ elif snakemake.params["pairwise"] == "False":
 else:
     pass
 
+
 xebec_logger.info(f"Diversity Metric: {div_metric}")
 xebec_logger.info("Calculating effect sizes...")
 res = func(dh, md.columns).to_dataframe()
