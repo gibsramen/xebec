@@ -1,14 +1,22 @@
+import biom
 import numpy as np
 import pandas as pd
 
 from xebec import get_logger
+from xebec.src._depth import map_quartiles
 
 
 xebec_logger = get_logger(snakemake.log[0], snakemake.rule)
-metadata = pd.read_table(snakemake.input[0], sep="\t", index_col=0)
-xebec_logger.info(f"Original metadata shape: {metadata.shape}")
+md = pd.read_table(snakemake.input["md_file"], sep="\t", index_col=0)
+xebec_logger.info(f"Original metadata shape: {md.shape}")
 
-md = metadata.copy()
+xebec_logger.info("Adding sample depth column to metadata...")
+tbl = biom.load_table(snakemake.input["tbl_file"])
+sample_ids = tbl.ids()
+md = md.loc[sample_ids]  # Reorder to match
+depths = tbl.sum(axis="sample")
+md["xebec_sampling_depth"] = map_quartiles(depths)
+
 all_cols = md.columns
 
 cols_to_drop = []
