@@ -5,5 +5,6 @@
     "phylogenetic_tree_file": "",
     "max_category_levels": 5,
     "min_level_count": 3,
-    "rarefaction_depth_percentile": 10
+    "rarefaction_depth_percentile": 10,
+    "shuffle_iterations": 100
 }
