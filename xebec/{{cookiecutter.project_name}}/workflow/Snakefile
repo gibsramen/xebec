@@ -47,14 +47,35 @@ beta_div_pw_effect_sizes = [
     for i, row in beta_metrics.iterrows()
 ]
 
+alpha_null_dists = [
+    f"results/alpha_div/{row['phylogenetic']}/{row['diversity_metric']}/shuffled_effect_sizes.tsv"
+    for i, row in alpha_metrics.iterrows()
+]
+beta_null_dists = [
+    f"results/beta_div/{row['phylogenetic']}/{row['diversity_metric']}/shuffled_effect_sizes.tsv"
+    for i, row in beta_metrics.iterrows()
+]
+
+interactive_target = expand(
+    "results/{diversity_type}_div/{plot_type}.html",
+    diversity_type=["alpha", "beta"],
+    plot_type=["effect_size_plot", "pairwise_effect_size_plot"]
+)
+
+null_dist_target = alpha_null_dists + beta_null_dists
+all_target = interactive_target + null_dist_target
 
 rule all:
     input:
-        expand(
-            "results/{diversity_type}_div/{plot_type}.html",
-            diversity_type=["alpha", "beta"],
-            plot_type=["effect_size_plot", "pairwise_effect_size_plot"]
-        )
+        all_target
+
+rule interactive_visualizations:
+    input:
+        interactive_target
+
+rule null_distributions:
+    input:
+        null_dist_target
 
 configfile: "config/config.yaml"
 

@@ -109,3 +109,38 @@ rule concatenate_beta_div_pairwise_effect_sizes:
         "logs/concatenate_beta_div_pairwise_effect_sizes.log"
     script:
         "../scripts/concatenate.py"
+
+
+shuffled_metadata_files = [
+    f"results/shuffled/shuffled_metadata.{x+1}.tsv"
+    for x in range(config["shuffle_iterations"])
+]
+
+rule calculate_alpha_div_effect_sizes_shuffled:
+    input:
+        ad_file = "results/alpha_div/{is_phylo}/{alpha_div_metric}/vector.tsv",
+        shuf_md_files = shuffled_metadata_files
+    output:
+        "results/alpha_div/{is_phylo}/{alpha_div_metric}/shuffled_effect_sizes.tsv"
+    params:
+        div_type = "alpha",
+        pairwise = "False"
+    log:
+        "logs/calculate_alpha_div_effect_sizes_shuffled.{is_phylo}.{alpha_div_metric}.log"
+    script:
+        "../scripts/create_evident_null.py"
+
+
+rule calculate_beta_div_effect_sizes_shuffled:
+    input:
+        dm_file = "results/beta_div/{is_phylo}/{beta_div_metric}/distance-matrix.tsv",
+        shuf_md_files = shuffled_metadata_files
+    output:
+        "results/beta_div/{is_phylo}/{beta_div_metric}/shuffled_effect_sizes.tsv"
+    params:
+        div_type = "beta",
+        pairwise = "False"
+    log:
+        "logs/calculate_beta_div_effect_sizes_shuffled.{is_phylo}.{beta_div_metric}.log"
+    script:
+        "../scripts/create_evident_null.py"

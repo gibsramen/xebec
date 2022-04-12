@@ -25,6 +25,8 @@ from xebec.src._validate import (validate_table, validate_metadata,
                type=int, help="Min number of samples per level per category.")
 @click.option("--rarefy-percentile", default=10, show_default=True,
                type=float, help="Percentile of sample depths at which to rarefy.")
+@click.option("--shuffle-iterations", default=10, show_default=True,
+               type=int, help="Number of metadata shuffling iterations.")
 @click.option("--validate-input/--no-validate-input", default=True,
               help="Whether to validate input before creating workflow.",
               show_default=True)
@@ -39,6 +41,7 @@ def xebec(
     max_category_levels,
     min_level_count,
     rarefy_percentile,
+    shuffle_iterations,
     validate_input,
     execute
 ):
@@ -63,6 +66,7 @@ def xebec(
         "phylogenetic_tree_file": tree,
         "max_category_levels": max_category_levels,
         "min_level_count": min_level_count,
+        "shuffle_iterations": shuffle_iterations,
         "rarefaction_depth_percentile": rarefy_percentile,
     }
 
