@@ -14,4 +14,5 @@ snaketest:
 	cookiecutter --no-input $(COOKIE_DIR) feature_table_file=$(TABLE_FILE) sample_metadata_file=$(MD_FILE) phylogenetic_tree_file=$(TREE_FILE); \
 	cd diversity-benchmark; \
 	snakemake --cores 1; \
+	snakemake --report report.html; \
 	rm -r $(TMPDIR)
