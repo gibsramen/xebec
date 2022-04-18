@@ -1,5 +1,7 @@
 import pandas as pd
 
+report: "report/workflow.rst"
+
 
 alpha_metrics_path = "config/alpha_div_metrics.tsv"
 alpha_metrics = pd.read_table(alpha_metrics_path, sep="\t")

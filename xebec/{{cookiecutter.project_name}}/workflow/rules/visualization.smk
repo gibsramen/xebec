@@ -29,7 +29,11 @@ rule plot_effect_sizes:
     input:
         "results/{diversity_type}/all_metrics_effect_sizes.tsv"
     output:
-        "results/{diversity_type}/effect_size_plot.html"
+        report(
+            "results/{diversity_type}/effect_size_plot.html",
+            caption="../report/effect_size_plot.rst",
+            category="Effect size plots"
+        )
     params:
         all_div_metrics = get_div_metrics,
         non_phylo_metrics = get_non_phylo_div_metrics,
@@ -37,8 +41,6 @@ rule plot_effect_sizes:
     log:
         "logs/plot_{diversity_type}_effect_sizes.log"
     script:
-        # The script path is always relative to the Snakefile
-        #   containing the directive
         "../scripts/interactive_effect_sizes.py"
 
 
@@ -46,7 +48,11 @@ rule plot_pairwise_effect_sizes:
     input:
         "results/{diversity_type}/all_metrics_pairwise_effect_sizes.tsv"
     output:
-        "results/{diversity_type}/pairwise_effect_size_plot.html"
+        report(
+            "results/{diversity_type}/pairwise_effect_size_plot.html",
+            caption="../report/pw_effect_size_plot.rst",
+            category="Effect size plots"
+        )
     params:
         all_div_metrics = get_div_metrics,
         non_phylo_metrics = get_non_phylo_div_metrics,
@@ -54,6 +60,4 @@ rule plot_pairwise_effect_sizes:
     log:
         "logs/plot_{diversity_type}_pairwise_effect_sizes.log"
     script:
-        # The script path is always relative to the Snakefile
-        #   containing the directive
         "../scripts/interactive_pw_effect_sizes.py"
