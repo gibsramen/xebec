@@ -65,12 +65,16 @@ Additionally, you can provide parameters for determining how to process your sam
 After running this command, navigate to the output directory you created. The directory structure should be as follows:
 
 ```
-diversity-benchmark/
+.
 ├── config
 │   ├── alpha_div_metrics.tsv
 │   ├── beta_div_metrics.tsv
 │   └── config.yaml
 └── workflow
+    ├── report
+    │   ├── effect_size_plot.rst
+    │   ├── pw_effect_size_plot.rst
+    │   └── workflow.rst
     ├── rules
     │   ├── alpha_diversity.smk
     │   ├── beta_diversity.smk
@@ -82,7 +86,6 @@ diversity-benchmark/
     │   ├── beta_diversity.py
     │   ├── concatenate.py
     │   ├── filter_metadata.py
-    │   ├── helper.py
     │   ├── interactive_effect_sizes.py
     │   ├── interactive_pw_effect_sizes.py
     │   ├── rarefy.py
@@ -133,3 +136,15 @@ Make sure that any additional diversity metrics are annotated with `phylo` or `n
 The xebec workflow can be decorated with many configuration options available in Snakemake, including resource usage and HPC scheduling.
 We recommend reading through the [Snakemake documentation](https://snakemake.readthedocs.io/en/stable/index.html) for details on these options.
 Note that some of these options may require creating new configuration files.
+
+### Generating workflow reports
+
+Snakemake allows finished workflow information to be collated into a [report](https://snakemake.readthedocs.io/en/stable/snakefiles/reporting.html).
+These reports summarize runtime, the rule graph, as well as including visualizations.
+To generate a report of a *finished* workflow, run the following command:
+
+```
+snakemake --report report.html
+```
+
+This report can be opened in a modern web browser and includes the interactive plots generated from xebec.
