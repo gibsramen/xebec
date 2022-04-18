@@ -28,7 +28,7 @@ def test_bake_project(cookies, data_paths):
 
     workflow_dir = os.path.join(result.project_path, "workflow")
     workflow_files = os.listdir(workflow_dir)
-    assert set(workflow_files) == {"rules", "Snakefile", "scripts"}
+    assert set(workflow_files) == {"rules", "Snakefile", "scripts", "report"}
 
     rules_dir = os.path.join(workflow_dir, "rules")
     rules_files = os.listdir(rules_dir)
@@ -52,4 +52,12 @@ def test_bake_project(cookies, data_paths):
         "filter_metadata.py",
         "rarefy.py",
         "run_evident.py"
+    }
+
+    report_dir = os.path.join(workflow_dir, "report")
+    report_files = os.listdir(report_dir)
+    assert set(report_files) == {
+        "effect_size_plot.rst",
+        "pw_effect_size_plot.rst",
+        "workflow.rst",
     }
