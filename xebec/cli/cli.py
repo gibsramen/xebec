@@ -1,13 +1,26 @@
+import logging
 import os
-from pathlib import PurePath
+from pathlib import Path
 import subprocess
 
 import click
-from cookiecutter.main import cookiecutter
+from jinja2 import Template
+from snakedeploy.deploy import deploy
+from snakedeploy.logger import logger
 
-from xebec import COOKIE_DIR
-from xebec.src._validate import (validate_table, validate_metadata,
-                                 validate_tree)
+from xebec import __version__
+from xebec._validate import (validate_table, validate_metadata,
+                             validate_tree)
+
+CONFIG_TEMPLATE = """{
+    "feature_table_file": {{ feature_table_file }},
+    "sample_metadata_file": {{ sample_metadata_file }},
+    "phylogenetic_tree_file" : {{ phylogenetic_tree_file }},
+    "max_category_levels": {{ max_category_levels }},
+    "min_level_count": {{ min_level_count }},
+    "rarefaction_depth_percentile": {{ rarefaction_depth_percentile }},
+}
+"""
 
 
 @click.command(name="xebec")
@@ -28,9 +41,6 @@ from xebec.src._validate import (validate_table, validate_metadata,
 @click.option("--validate-input/--no-validate-input", default=True,
               help="Whether to validate input before creating workflow.",
               show_default=True)
-@click.option("--execute/--no-execute", default=False, type=bool,
-               help="Whether to automatically execute the workflow.",
-               show_default=True)
 def xebec(
     feature_table,
     metadata,
@@ -40,7 +50,6 @@ def xebec(
     min_level_count,
     rarefy_percentile,
     validate_input,
-    execute
 ):
     feature_table = os.path.abspath(feature_table)
     metadata = os.path.abspath(metadata)
@@ -51,13 +60,7 @@ def xebec(
         validate_metadata(metadata)
         validate_tree(tree)
 
-    output = PurePath(output)
-    project_dir = output.parent
-    project_name = os.path.basename(output)
-    os.chdir(project_dir)
-
     args={
-        "project_name": project_name,
         "feature_table_file": feature_table,
         "sample_metadata_file": metadata,
         "phylogenetic_tree_file": tree,
@@ -66,11 +69,26 @@ def xebec(
         "rarefaction_depth_percentile": rarefy_percentile,
     }
 
-    cookiecutter(COOKIE_DIR, no_input=True, extra_context=args)
+    cfg_text = Template(CONFIG_TEMPLATE).render(args)
 
-    if execute:
-        os.chdir(project_name)
-        subprocess.run(["snakemake", "--cores", "1"], check=True)
+    xebec_repo_url = "https://github.com/gibsramen/xebec"
+    xebec_repo_tag = f"v{__version__}"
+
+    # Suppress warning that the config file doesn't exist since we copy it over
+    # afterwards with Jinja
+    logger.quiet = True
+    logger.logger.setLevel(logging.ERROR)
+
+    deploy(
+        xebec_repo_url, dest_path=Path(output), name="diversity-benchmark",
+        tag=xebec_repo_tag, branch=None
+    )
+
+    cfg_dir = os.path.join(output, "config")
+    os.makedirs(cfg_dir, exist_ok=True)
+    cfg_file = os.path.join(cfg_dir, "config.yaml")
+    with open(cfg_file, "w") as f:
+        f.write(cfg_text)
 
 
 if __name__ == "__main__":

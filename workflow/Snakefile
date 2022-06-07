@@ -1,0 +1,17 @@
+configfile: "config/config.yaml"
+
+
+include: "rules/common.smk"
+include: "rules/preprocess_data.smk"
+include: "rules/alpha_diversity.smk"
+include: "rules/beta_diversity.smk"
+include: "rules/evident.smk"
+include: "rules/visualization.smk"
+
+rule all:
+    input:
+        expand(
+            "results/{diversity_type}_div/{plot_type}.html",
+            diversity_type=["alpha", "beta"],
+            plot_type=["effect_size_plot", "pairwise_effect_size_plot"]
+        )

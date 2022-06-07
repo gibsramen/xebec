@@ -46,20 +46,3 @@ beta_div_pw_effect_sizes = [
     f"results/beta_div/{row['phylogenetic']}/{row['diversity_metric']}/pairwise_effect_sizes.tsv"
     for i, row in beta_metrics.iterrows()
 ]
-
-
-rule all:
-    input:
-        expand(
-            "results/{diversity_type}_div/{plot_type}.html",
-            diversity_type=["alpha", "beta"],
-            plot_type=["effect_size_plot", "pairwise_effect_size_plot"]
-        )
-
-configfile: "config/config.yaml"
-
-include: "rules/preprocess_data.smk"
-include: "rules/alpha_diversity.smk"
-include: "rules/beta_diversity.smk"
-include: "rules/evident.smk"
-include: "rules/visualization.smk"
