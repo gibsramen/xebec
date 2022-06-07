@@ -6,7 +6,7 @@ from bokeh.models.callbacks import CustomJS
 from bokeh.plotting import output_file, save, figure
 import pandas as pd
 
-import xebec.src._visualization as viz
+import xebec._visualization as viz
 
 
 diversity_metric_order = snakemake.params["all_div_metrics"]

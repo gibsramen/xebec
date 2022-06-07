@@ -1,7 +1,7 @@
 rule filter_metadata:
     input:
-        md_file = "{{cookiecutter.sample_metadata_file}}",
-        tbl_file = "{{cookiecutter.feature_table_file}}"
+        md_file=config["sample_metadata_file"],
+        tbl_file=config["feature_table_file"]
     output:
         "results/filtered_metadata.tsv"
     log:
@@ -12,7 +12,7 @@ rule filter_metadata:
 
 rule rarefy:
     input:
-        "{{cookiecutter.feature_table_file}}"
+        config["feature_table_file"]
     output:
         "results/rarefied_table.biom"
     log:

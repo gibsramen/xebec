@@ -13,6 +13,8 @@ rule calculate_alpha_div_effect_sizes:
         ad_file = "results/alpha_div/{is_phylo}/{alpha_div_metric}/vector.tsv"
     output:
         "results/alpha_div/{is_phylo}/{alpha_div_metric}/effect_sizes.tsv"
+    conda:
+        "../envs/default.yaml"
     params:
         div_type = "alpha",
         pairwise = "False"
@@ -28,6 +30,8 @@ rule calculate_beta_div_effect_sizes:
         dm_file = "results/beta_div/{is_phylo}/{beta_div_metric}/distance-matrix.tsv"
     output:
         "results/beta_div/{is_phylo}/{beta_div_metric}/effect_sizes.tsv"
+    conda:
+        "../envs/default.yaml"
     params:
         div_type = "beta",
         pairwise = "False"
@@ -43,6 +47,8 @@ rule calculate_alpha_div_pairwise_effect_sizes:
         ad_file = "results/alpha_div/{is_phylo}/{alpha_div_metric}/vector.tsv"
     output:
         "results/alpha_div/{is_phylo}/{alpha_div_metric}/pairwise_effect_sizes.tsv"
+    conda:
+        "../envs/default.yaml"
     params:
         div_type = "alpha",
         pairwise = "True"
@@ -58,6 +64,8 @@ rule calculate_beta_div_pairwise_effect_sizes:
         dm_file = "results/beta_div/{is_phylo}/{beta_div_metric}/distance-matrix.tsv"
     output:
         "results/beta_div/{is_phylo}/{beta_div_metric}/pairwise_effect_sizes.tsv"
+    conda:
+        "../envs/default.yaml"
     params:
         div_type = "beta",
         pairwise = "True"
@@ -72,6 +80,8 @@ rule concatenate_alpha_div_effect_sizes:
         alpha_div_effect_sizes
     output:
         "results/alpha_div/all_metrics_effect_sizes.tsv"
+    conda:
+        "../envs/default.yaml"
     log:
         "logs/concatenate_alpha_div_effect_sizes.log"
     script:
@@ -83,6 +93,8 @@ rule concatenate_beta_div_effect_sizes:
         beta_div_effect_sizes
     output:
         "results/beta_div/all_metrics_effect_sizes.tsv"
+    conda:
+        "../envs/default.yaml"
     log:
         "logs/concatenate_beta_div_effect_sizes.log"
     script:
@@ -94,6 +106,8 @@ rule concatenate_alpha_div_pairwise_effect_sizes:
         alpha_div_pw_effect_sizes
     output:
         "results/alpha_div/all_metrics_pairwise_effect_sizes.tsv"
+    conda:
+        "../envs/default.yaml"
     log:
         "logs/concatenate_alpha_div_pairwise_effect_sizes.log"
     script:
@@ -105,6 +119,8 @@ rule concatenate_beta_div_pairwise_effect_sizes:
         beta_div_pw_effect_sizes
     output:
         "results/beta_div/all_metrics_pairwise_effect_sizes.tsv"
+    conda:
+        "../envs/default.yaml"
     log:
         "logs/concatenate_beta_div_pairwise_effect_sizes.log"
     script:

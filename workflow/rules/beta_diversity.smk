@@ -4,10 +4,12 @@ import re
 ## NON-PHYLOGENETIC METRICS ##
 rule rpca:
     input:
-        "{{cookiecutter.feature_table_file}}"
+        config["feature_table_file"]
     output:
         "results/beta_div/non_phylo/rpca/distance-matrix.tsv",
         "results/beta_div/non_phylo/rpca/ordination.txt"
+    conda:
+        "../envs/default.yaml"
     log:
         "logs/rpca.log"
     shell:
@@ -25,6 +27,8 @@ rule non_phylo_beta_div:
         "results/rarefied_table.biom"
     output:
         "results/beta_div/non_phylo/{beta_div_metric}/distance-matrix.tsv"
+    conda:
+        "../envs/default.yaml"
     log:
         "logs/{beta_div_metric}.log"
     params:
@@ -36,11 +40,13 @@ rule non_phylo_beta_div:
 ## PHYLOGENETIC METRICS ##
 rule phylo_rpca:
     input:
-        tbl_file = "{{cookiecutter.feature_table_file}}",
-        tree_file = "{{cookiecutter.phylogenetic_tree_file}}"
+        tbl_file=config["feature_table_file"],
+        tree_file=config["phylogenetic_tree_file"]
     output:
         "results/beta_div/phylo/phylo_rpca/distance-matrix.tsv",
         "results/beta_div/phylo/phylo_rpca/ordination.txt"
+    conda:
+        "../envs/default.yaml"
     log:
         "logs/phylo_rpca.log"
     shell:
@@ -57,10 +63,12 @@ unifrac_regex = re.compile("(.*)_unifrac")
 
 rule phylo_beta_div:
     input:
-        tbl_file = "results/rarefied_table.biom",
-        tree_file = "{{cookiecutter.phylogenetic_tree_file}}"
+        tbl_file="results/rarefied_table.biom",
+        tree_file=config["phylogenetic_tree_file"]
     output:
         "results/beta_div/phylo/{beta_div_metric}/distance-matrix.tsv"
+    conda:
+        "../envs/default.yaml"
     log:
         "logs/{beta_div_metric}.log"
     params:

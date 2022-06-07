@@ -5,3 +5,6 @@
 dist/
 build/
 results/
+.snakemake/
+slurm_out/
+logs/

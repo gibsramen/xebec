@@ -45,7 +45,7 @@ setup(
     url="https://github.com/gibsramen/xebec",
     version=version,
     license="BSD-3-Clause",
-    packages=["xebec/src", "xebec/cli", "xebec"],
+    packages=["xebec", "xebec/cli"],
     install_requires=[
         "numpy",
         "h5py==3.1.0",
@@ -55,13 +55,12 @@ setup(
         "scikit-bio>=0.5.6",
         "unifrac",
         "snakemake",
-        "cookiecutter",
         "seaborn",
         "bokeh",
         "click"
     ],
     include_package_data=True,
-    package_data={"": ["xebec/js", "xebec/{{cookiecutter.project_name}}"]},
+    package_data={"": ["xebec"]},
     entry_points={"console_scripts": standalone},
     classifiers=classifiers,
 )

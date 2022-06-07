@@ -1,10 +1,12 @@
 rule non_phylo_alpha_div:
     input:
-        tbl_file = "results/rarefied_table.biom"
+        tbl_file="results/rarefied_table.biom"
     output:
         "results/alpha_div/non_phylo/{alpha_div_metric}/vector.tsv"
     log:
         "logs/{alpha_div_metric}.log"
+    conda:
+        "../envs/default.yaml"
     params:
         phylo = "False",
         out_dir = "results/alpha_div/non_phylo/{alpha_div_metric}"
@@ -14,12 +16,14 @@ rule non_phylo_alpha_div:
 
 rule phylo_alpha_div:
     input:
-        tbl_file = "results/rarefied_table.biom",
-        tree_file = "{{cookiecutter.phylogenetic_tree_file}}"
+        tbl_file="results/rarefied_table.biom",
+        tree_file=config["phylogenetic_tree_file"]
     output:
         "results/alpha_div/phylo/{alpha_div_metric}/vector.tsv"
     log:
         "logs/{alpha_div_metric}.log"
+    conda:
+        "../envs/default.yaml"
     params:
         phylo = "True",
         out_dir = "results/alpha_div/non_phylo/{alpha_div_metric}"
