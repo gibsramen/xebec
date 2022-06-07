@@ -1,6 +1,6 @@
 from pathlib import PurePath
 
-from evident import AlphaDiversityHandler, BetaDiversityHandler
+from evident import UnivariateDataHandler, MultivariateDataHandler
 from evident.effect_size import effect_size_by_category, pairwise_effect_size_by_category
 import numpy as np
 import pandas as pd

@@ -49,7 +49,7 @@ setup(
     install_requires=[
         "numpy",
         "h5py==3.1.0",
-        "evident>=0.2.0",
+        "evident>=0.4.0",
         "gemelli>=0.0.8",
         "pandas>=1.0.0",
         "scikit-bio>=0.5.6",

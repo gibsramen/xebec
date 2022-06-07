@@ -1,4 +1,4 @@
-from evident import AlphaDiversityHandler, BetaDiversityHandler
+from evident import UnivariateDataHandler, MultivariateDataHandler
 from evident.effect_size import effect_size_by_category, pairwise_effect_size_by_category
 import numpy as np
 import pandas as pd
@@ -15,11 +15,11 @@ md = pd.read_table(snakemake.input["md_file"], sep="\t", index_col=0)
 
 if snakemake.params["div_type"] == "alpha":
     data = pd.read_table(snakemake.input["ad_file"], sep="\t", index_col=0).squeeze()
-    dh = AlphaDiversityHandler(data, md)
+    dh = UnivariateDataHandler(data, md)
     div_metric = snakemake.wildcards["alpha_div_metric"]
 elif snakemake.params["div_type"] == "beta":
     data = DistanceMatrix.read(snakemake.input["dm_file"])
-    dh = BetaDiversityHandler(data, md)
+    dh = MultivariateDataHandler(data, md)
     div_metric = snakemake.wildcards["beta_div_metric"]
 else:
     pass
