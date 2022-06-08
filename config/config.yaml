@@ -1,9 +1,0 @@
-{
-    "feature_table_file": /home/grahman/projects/xebec/xebec/tests/data/table.biom,
-    "sample_metadata_file": /home/grahman/projects/xebec/xebec/tests/data/metadata.tsv,
-    "phylogenetic_tree_file" : /home/grahman/projects/xebec/xebec/tests/data/tree.tre,
-    "max_category_levels": 5,
-    "min_level_count": 3,
-    "rarefaction_depth_percentile": 10.0,
-    "n_components": 3
-}

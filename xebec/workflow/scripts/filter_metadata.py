@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 from xebec import get_logger
-from xebec._depth import map_quartiles
+from xebec.src._depth import map_quartiles
 
 
 xebec_logger = get_logger(snakemake.log[0], snakemake.rule)

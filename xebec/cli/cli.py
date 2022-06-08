@@ -1,7 +1,6 @@
-import logging
 import os
-from pathlib import Path
-import subprocess
+from pkg_resources import resource_filename
+import shutil
 
 import click
 from jinja2 import Template
@@ -9,18 +8,8 @@ from snakedeploy.deploy import deploy
 from snakedeploy.logger import logger
 
 from xebec import __version__
-from xebec._validate import (validate_table, validate_metadata,
-                             validate_tree)
-
-CONFIG_TEMPLATE = """{
-    "feature_table_file": {{ feature_table_file }},
-    "sample_metadata_file": {{ sample_metadata_file }},
-    "phylogenetic_tree_file" : {{ phylogenetic_tree_file }},
-    "max_category_levels": {{ max_category_levels }},
-    "min_level_count": {{ min_level_count }},
-    "rarefaction_depth_percentile": {{ rarefaction_depth_percentile }},
-}
-"""
+from xebec.src._validate import (validate_table, validate_metadata,
+                                 validate_tree)
 
 
 @click.command(name="xebec")
@@ -38,6 +27,8 @@ CONFIG_TEMPLATE = """{
                type=int, help="Min number of samples per level per category.")
 @click.option("--rarefy-percentile", default=10, show_default=True,
                type=float, help="Percentile of sample depths at which to rarefy.")
+@click.option("--n-pcoa-components", default=3, show_default=True,
+               type=int, help="Number of PCoA components to compuate.")
 @click.option("--validate-input/--no-validate-input", default=True,
               help="Whether to validate input before creating workflow.",
               show_default=True)
@@ -49,6 +40,7 @@ def xebec(
     max_category_levels,
     min_level_count,
     rarefy_percentile,
+    n_pcoa_components,
     validate_input,
 ):
     feature_table = os.path.abspath(feature_table)
@@ -67,28 +59,52 @@ def xebec(
         "max_category_levels": max_category_levels,
         "min_level_count": min_level_count,
         "rarefaction_depth_percentile": rarefy_percentile,
+        "n_pcoa_components": n_pcoa_components
     }
 
-    cfg_text = Template(CONFIG_TEMPLATE).render(args)
+    os.makedirs(output)
 
-    xebec_repo_url = "https://github.com/gibsramen/xebec"
-    xebec_repo_tag = f"v{__version__}"
+    # Create Snakfile
+    wkflow_dir = os.path.join(output, "workflow")
+    os.makedirs(wkflow_dir)
+    orig_snakefile_path = resource_filename("xebec", "workflow/Snakefile")
+    snkfile_template = resource_filename("xebec", "template/Snakefile.jinja2")
 
-    # Suppress warning that the config file doesn't exist since we copy it over
-    # afterwards with Jinja
-    logger.quiet = True
-    logger.logger.setLevel(logging.ERROR)
+    with open(snkfile_template, "r") as f:
+        snakefile_text = (
+            Template(f.read())
+            .render({"original_snakefile_path": orig_snakefile_path})
+        )
 
-    deploy(
-        xebec_repo_url, dest_path=Path(output), name="diversity-benchmark",
-        tag=xebec_repo_tag, branch=None
+    new_snakefile_path = os.path.join(wkflow_dir, "Snakefile")
+    with open(new_snakefile_path, "w") as f:
+        f.write(snakefile_text)
+
+    # Create config file
+    cfg_dir = os.path.join(output, "config")
+    os.makedirs(cfg_dir)
+    cfg_template = resource_filename("xebec", "template/config.yaml.jinja2")
+
+    with open(cfg_template, "r") as f:
+        cfg_text = Template(f.read()) .render(args)
+
+    cfg_file_path = os.path.join(cfg_dir, "config.yaml")
+    with open(cfg_file_path, "w") as f:
+        f.write(cfg_text)
+
+    # Copy diversity metric files
+    orig_a_div_file = resource_filename(
+        "xebec", "config/alpha_div_metrics.tsv"
+    )
+    orig_b_div_file = resource_filename(
+        "xebec", "config/beta_div_metrics.tsv"
     )
 
-    cfg_dir = os.path.join(output, "config")
-    os.makedirs(cfg_dir, exist_ok=True)
-    cfg_file = os.path.join(cfg_dir, "config.yaml")
-    with open(cfg_file, "w") as f:
-        f.write(cfg_text)
+    new_a_div_file = os.path.join(cfg_dir, "alpha_div_metrics.tsv")
+    new_b_div_file = os.path.join(cfg_dir, "beta_div_metrics.tsv")
+
+    shutil.copy(orig_a_div_file, new_a_div_file)
+    shutil.copy(orig_b_div_file, new_b_div_file)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 from evident import UnivariateDataHandler, MultivariateDataHandler
-from evident.effect_size import effect_size_by_category, pairwise_effect_size_by_category
+from evident.effect_size import (effect_size_by_category,
+                                 pairwise_effect_size_by_category)
 import numpy as np
 import pandas as pd
 from skbio import DistanceMatrix

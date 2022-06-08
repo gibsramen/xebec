@@ -1,0 +1,11 @@
+from snakemake.utils import min_version
+min_version("6.0")
+
+configfile: "config/config.yaml"
+
+module other_workflow:
+    snakefile:
+        "{{ original_snakefile_path }}"
+    config: config
+
+use rule * from other_workflow as other_*

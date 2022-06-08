@@ -45,7 +45,7 @@ setup(
     url="https://github.com/gibsramen/xebec",
     version=version,
     license="BSD-3-Clause",
-    packages=["xebec", "xebec/cli"],
+    packages=["xebec/src", "xebec/cli"],
     install_requires=[
         "numpy",
         "h5py==3.1.0",
@@ -57,7 +57,8 @@ setup(
         "snakemake",
         "seaborn",
         "bokeh",
-        "click"
+        "click",
+        "jinja2"
     ],
     include_package_data=True,
     package_data={"": ["xebec"]},
