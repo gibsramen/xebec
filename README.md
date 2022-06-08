@@ -13,9 +13,9 @@ To use xebec, you will need several dependencies.
 We recommend using [`mamba`](https://github.com/mamba-org/mamba) to install these packages when possible.
 
 ```
-mamba install -c conda-forge -c bioconda biom-format h5py==3.1.0 snakemake pandas unifrac scikit-bio bokeh cookiecutter unifrac-binaries
+mamba install -c conda-forge -c bioconda biom-format h5py==3.1.0 snakemake pandas unifrac scikit-bio bokeh unifrac-binaries jinja2
 
-pip install evident>=0.2.0 gemelli>=0.0.8
+pip install evident>=0.4.0 gemelli>=0.0.8
 ```
 
 To install xebec, run the following command from the command line:
@@ -33,28 +33,23 @@ $ xebec --help
 Usage: xebec [OPTIONS]
 
 Options:
+  --version                       Show the version and exit.
   -ft, --feature-table PATH       Feature table in BIOM format.  [required]
   -m, --metadata PATH             Sample metadata in TSV format.  [required]
   -t, --tree PATH                 Phylogenetic tree in Newick format.
                                   [required]
-
   -o, --output PATH               Output workflow directory.  [required]
   --max-category-levels INTEGER   Max number of levels in a category.
                                   [default: 5]
-
   --min-level-count INTEGER       Min number of samples per level per
                                   category.  [default: 3]
-
   --rarefy-percentile FLOAT       Percentile of sample depths at which to
                                   rarefy.  [default: 10]
-
+  --n-pcoa-components INTEGER     Number of PCoA components to compuate.
+                                  [default: 3]
   --validate-input / --no-validate-input
                                   Whether to validate input before creating
-                                  workflow.  [default: True]
-
-  --execute / --no-execute        Whether to automatically execute the
-                                  workflow.  [default: False]
-
+                                  workflow.  [default: validate-input]
   --help                          Show this message and exit.
 ```
 
@@ -62,35 +57,9 @@ To create the workflow structure, pass in the filepaths for the feature table, s
 You must also pass in a path to a directory in which to create the workflow.
 Additionally, you can provide parameters for determining how to process your sample metadata.
 
-After running this command, navigate to the output directory you created. The directory structure should be as follows:
+After running this command, navigate inside the output directory you created.
+There should be two subdirectories: `workflow/` and `config/`.
 
-```
-diversity-benchmark/
-├── config
-│   ├── alpha_div_metrics.tsv
-│   ├── beta_div_metrics.tsv
-│   └── config.yaml
-└── workflow
-    ├── rules
-    │   ├── alpha_diversity.smk
-    │   ├── beta_diversity.smk
-    │   ├── evident.smk
-    │   ├── preprocess_data.smk
-    │   └── visualization.smk
-    ├── scripts
-    │   ├── alpha_diversity.py
-    │   ├── beta_diversity.py
-    │   ├── concatenate.py
-    │   ├── filter_metadata.py
-    │   ├── helper.py
-    │   ├── interactive_effect_sizes.py
-    │   ├── interactive_pw_effect_sizes.py
-    │   ├── rarefy.py
-    │   └── run_evident.py
-    └── Snakefile
-```
-
-Navigate inside the `<project_name>` directory.
 To start the pipeline , run the following command:
 
 ```
@@ -98,7 +67,7 @@ snakemake --cores 1
 ```
 
 You should see the Snakemake pipeline start running the jobs.
-If this pipeline runs sucessfully, the processed results will be located at `<project_name>/results`.
+If this pipeline runs sucessfully, the processed results will be located at `results/`.
 Included in the results are the concatenated effect size values as well as interactive plots summarizing the effect sizes for each metadata column for each diversity metric.
 These plots are generated using [Bokeh](https://github.com/bokeh/bokeh) and can be visualized in any modern web browser.
 
