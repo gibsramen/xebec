@@ -9,8 +9,11 @@ from xebec import __version__
 from xebec.src._validate import (validate_table, validate_metadata,
                                  validate_tree)
 
+help = "Create workflow to benchmark alpha and beta diversity metrics."
 
-@click.command(name="xebec")
+
+@click.command(name="xebec", short_help=help)
+@click.version_option(__version__)
 @click.option("--feature-table", "-ft", required=True, type=click.Path(),
                help="Feature table in BIOM format.")
 @click.option("--metadata", "-m", required=True, type=click.Path(),
@@ -26,7 +29,7 @@ from xebec.src._validate import (validate_table, validate_metadata,
 @click.option("--rarefy-percentile", default=10, show_default=True,
                type=float, help="Percentile of sample depths at which to rarefy.")
 @click.option("--n-pcoa-components", default=3, show_default=True,
-               type=int, help="Number of PCoA components to compuate.")
+               type=int, help="Number of PCoA components to compute.")
 @click.option("--validate-input/--no-validate-input", default=True,
               help="Whether to validate input before creating workflow.",
               show_default=True)
