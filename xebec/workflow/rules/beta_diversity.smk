@@ -8,8 +8,6 @@ rule rpca:
     output:
         "results/beta_div/non_phylo/rpca/distance-matrix.tsv",
         "results/beta_div/non_phylo/rpca/ordination.txt"
-    conda:
-        "../envs/default.yaml"
     log:
         "logs/rpca.log"
     shell:
@@ -27,8 +25,6 @@ rule non_phylo_beta_div:
         "results/rarefied_table.biom"
     output:
         "results/beta_div/non_phylo/{beta_div_metric}/distance-matrix.tsv"
-    conda:
-        "../envs/default.yaml"
     log:
         "logs/{beta_div_metric}.log"
     params:
@@ -45,8 +41,6 @@ rule phylo_rpca:
     output:
         "results/beta_div/phylo/phylo_rpca/distance-matrix.tsv",
         "results/beta_div/phylo/phylo_rpca/ordination.txt"
-    conda:
-        "../envs/default.yaml"
     log:
         "logs/phylo_rpca.log"
     shell:
@@ -67,8 +61,6 @@ rule phylo_beta_div:
         tree_file=config["phylogenetic_tree_file"]
     output:
         "results/beta_div/phylo/{beta_div_metric}/distance-matrix.tsv"
-    conda:
-        "../envs/default.yaml"
     log:
         "logs/{beta_div_metric}.log"
     params:

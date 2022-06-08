@@ -1,2 +1,6 @@
 graft xebec/cli
 graft xebec/js
+graft xebec/config
+graft xebec/template
+graft xebect/tests
+graft xebec/workflow

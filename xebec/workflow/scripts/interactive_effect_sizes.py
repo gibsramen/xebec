@@ -3,7 +3,7 @@ from bokeh.models import ColumnDataSource
 from bokeh.plotting import output_file, save, figure
 import pandas as pd
 
-import xebec._visualization as viz
+import xebec.src._visualization as viz
 
 
 def generate_interactive_effect_sizes(es_metric: str):

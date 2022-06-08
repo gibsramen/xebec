@@ -5,8 +5,6 @@ rule non_phylo_alpha_div:
         "results/alpha_div/non_phylo/{alpha_div_metric}/vector.tsv"
     log:
         "logs/{alpha_div_metric}.log"
-    conda:
-        "../envs/default.yaml"
     params:
         phylo = "False",
         out_dir = "results/alpha_div/non_phylo/{alpha_div_metric}"
@@ -22,8 +20,6 @@ rule phylo_alpha_div:
         "results/alpha_div/phylo/{alpha_div_metric}/vector.tsv"
     log:
         "logs/{alpha_div_metric}.log"
-    conda:
-        "../envs/default.yaml"
     params:
         phylo = "True",
         out_dir = "results/alpha_div/non_phylo/{alpha_div_metric}"

@@ -3,7 +3,7 @@ from pathlib import PurePath
 import pandas as pd
 
 from xebec import get_logger
-from xebec._concatenate import concatenate_metric_dataframes
+from xebec.src._concatenate import concatenate_metric_dataframes
 
 
 xebec_logger = get_logger(snakemake.log[0], snakemake.rule)
