@@ -4,8 +4,6 @@ import shutil
 
 import click
 from jinja2 import Template
-from snakedeploy.deploy import deploy
-from snakedeploy.logger import logger
 
 from xebec import __version__
 from xebec.src._validate import (validate_table, validate_metadata,
