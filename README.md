@@ -102,3 +102,7 @@ Make sure that any additional diversity metrics are annotated with `phylo` or `n
 The xebec workflow can be decorated with many configuration options available in Snakemake, including resource usage and HPC scheduling.
 We recommend reading through the [Snakemake documentation](https://snakemake.readthedocs.io/en/stable/index.html) for details on these options.
 Note that some of these options may require creating new configuration files.
+
+## Issues
+
+If you have any issues with xebec, please leave a GitHub issue.
