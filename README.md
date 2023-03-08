@@ -105,4 +105,4 @@ Note that some of these options may require creating new configuration files.
 
 ## Issues
 
-If you have any issues with xebec, please leave a GitHub issue.
+If you have any issues with xebec, please leave a GitHub issue or pull request.
