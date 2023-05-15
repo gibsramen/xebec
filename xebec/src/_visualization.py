@@ -27,17 +27,13 @@ SCATTER_PHYLO_MARKER = "triangle"
 SCATTER_NON_PHYLO_PALETTE = "Reds"
 SCATTER_NON_PHYLO_MARKER = "circle"
 
-# HOVER_POINTS = HoverTool(mode="mouse", names=["points"], attachment="below")
 HOVER_POINTS = HoverTool(mode="mouse", tooltips=[("Name", "points")], attachment="below")
-
 HOVER_POINTS.tooltips = [
     ("Effect Size", "@effect_size{0.000}"),
     ("Diversity Metric", "@diversity_metric")
 ]
 
-# HOVER_BOXES = HoverTool(mode="mouse", names=["boxes"], attachment="above")
 HOVER_BOXES = HoverTool(mode="mouse", tooltips=[("Name", "boxes")], attachment="above")
-
 HOVER_BOXES.tooltips = [
     ("25%", "@q1{0.000}"),
     ("50%", "@q2{0.000}"),
