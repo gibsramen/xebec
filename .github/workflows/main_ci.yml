@@ -35,7 +35,7 @@ jobs:
       # https://github.com/h5py/h5py/issues/1880
       - name: Install conda packages
         shell: bash -l {0}
-        run: mamba install -c conda-forge -c bioconda biom-format h5py==3.1.0 snakemake pandas pytest pytest-cookies unifrac scikit-bio
+        run: mamba install -c conda-forge -c bioconda biom-format h5py==3.1.0 scipy==1.8 numpy==1.23 snakemake pandas unifrac scikit-bio bokeh unifrac-binaries jinja2
 
       - name: Install pip packages
         shell: bash -l {0}
