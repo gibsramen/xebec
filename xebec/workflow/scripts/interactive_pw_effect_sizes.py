@@ -8,7 +8,6 @@ import pandas as pd
 
 import xebec.src._visualization as viz
 
-
 diversity_metric_order = snakemake.params["all_div_metrics"]
 non_phylo_metrics = snakemake.params["non_phylo_metrics"]
 phylo_metrics = snakemake.params["phylo_metrics"]
@@ -35,11 +34,9 @@ comparisons = col_df["comparison"].unique()
 div_metrics = col_df["diversity_metric"].unique()
 
 order = list(
-    col_df
-    .groupby("comparison")
+    df.groupby("column")["effect_size"]
     .median()
-    .sort_values(by="effect_size", ascending=False)
-    .index
+    .sort_values(ascending=False).index
 )
 
 hover_points = viz.HOVER_POINTS
@@ -48,7 +45,6 @@ hover_boxes = viz.HOVER_BOXES
 p = figure(
     tools=["pan", "reset", "box_zoom", hover_boxes, hover_points],
     y_range=order,
-    sizing_mode="stretch_both"
 )
 
 big_source = ColumnDataSource(df)

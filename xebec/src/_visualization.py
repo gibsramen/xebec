@@ -1,6 +1,6 @@
 from bokeh.models import ColumnDataSource, HoverTool
 import seaborn as sns
-
+import pandas as pd
 
 # Figure parameters
 TITLE_FONT_SIZE = "20pt"
@@ -27,13 +27,17 @@ SCATTER_PHYLO_MARKER = "triangle"
 SCATTER_NON_PHYLO_PALETTE = "Reds"
 SCATTER_NON_PHYLO_MARKER = "circle"
 
-HOVER_POINTS = HoverTool(mode="mouse", names=["points"], attachment="below")
+# HOVER_POINTS = HoverTool(mode="mouse", names=["points"], attachment="below")
+HOVER_POINTS = HoverTool(mode="mouse", tooltips=[("Name", "points")], attachment="below")
+
 HOVER_POINTS.tooltips = [
     ("Effect Size", "@effect_size{0.000}"),
     ("Diversity Metric", "@diversity_metric")
 ]
 
-HOVER_BOXES = HoverTool(mode="mouse", names=["boxes"], attachment="above")
+# HOVER_BOXES = HoverTool(mode="mouse", names=["boxes"], attachment="above")
+HOVER_BOXES = HoverTool(mode="mouse", tooltips=[("Name", "boxes")], attachment="above")
+
 HOVER_BOXES.tooltips = [
     ("25%", "@q1{0.000}"),
     ("50%", "@q2{0.000}"),
@@ -41,7 +45,7 @@ HOVER_BOXES.tooltips = [
 ]
 
 
-def add_boxplots(figure, all_metrics_es_df, group_var) -> None:
+def add_boxplots(figure, all_metrics_es_df:pd.DataFrame, group_var:str) -> None:
     """Add boxplots to figure."""
     gb = all_metrics_es_df.groupby(group_var)["effect_size"]
     q1 = gb.quantile(q=0.25)
@@ -59,7 +63,7 @@ def add_boxplots(figure, all_metrics_es_df, group_var) -> None:
     lower = [max([x, y]) for (x, y) in zip(list(qmin), lower)]
 
     box_df = (
-        all_metrics_es_df.groupby(group_var)
+        all_metrics_es_df.groupby(group_var)["effect_size"]
         .median()
         .assign(q1=q1, q2=q2, q3=q3,
                 qmin=qmin, qmax=qmax,

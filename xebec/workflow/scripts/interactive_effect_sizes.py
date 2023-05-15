@@ -12,9 +12,9 @@ def generate_interactive_effect_sizes(es_metric: str):
 
     # Order columns by median effect size
     order = list(
-        _df.groupby("column")
+        _df.groupby("column")["effect_size"]
         .median()
-        .sort_values(by="effect_size", ascending=False).index
+        .sort_values(ascending=False).index
     )
 
     # https://stackoverflow.com/a/27255567

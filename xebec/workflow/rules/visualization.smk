@@ -5,7 +5,7 @@ import seaborn as sns
 
 
 def get_div_metrics(wildcards):
-    if wildcards.diversity_type == "alpha_div":
+    if  wildcards.diversity_type == "alpha_div":
         return alpha_metrics["diversity_metric"].tolist()
     else:
         return beta_metrics["diversity_metric"].tolist()
