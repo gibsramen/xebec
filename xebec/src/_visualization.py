@@ -58,14 +58,18 @@ def add_boxplots(figure, all_metrics_es_df:pd.DataFrame, group_var:str) -> None:
     upper = [min([x, y]) for (x, y) in zip(list(qmax), upper)]
     lower = [max([x, y]) for (x, y) in zip(list(qmin), lower)]
 
-    box_df = (
-        all_metrics_es_df.groupby(group_var)["effect_size"]
-        .median()
-        .assign(q1=q1, q2=q2, q3=q3,
-                qmin=qmin, qmax=qmax,
-                upper=upper, lower=lower)
-        .reset_index()
-    )
+    box_df = pd.DataFrame(
+        {"effect_size":gb.groups.keys(),
+         "q1":q1,
+         "q2":q2,
+         "q3":q3,
+         "qmin":qmin,
+         "qmax":qmax,
+         "upper":upper, 
+         "lower":lower
+        }
+    ).reset_index()
+        
     box_source = ColumnDataSource(box_df)
 
     box_args = {
