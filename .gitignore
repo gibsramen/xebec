@@ -8,3 +8,4 @@ results/
 .snakemake/
 slurm_out/
 logs/
+tags*
